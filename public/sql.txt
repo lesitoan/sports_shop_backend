@@ -1,0 +1,162 @@
+CREATE TABLE users (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    userName VARCHAR(255) NOT NULL, 
+    gmail VARCHAR(255) NOT NULL, 
+    phoneNumber VARCHAR(255) NOT NULL, 
+    userPw VARCHAR(255) NOT NULL, 
+    isAdmin BOOLEAN DEFAULT false,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+);
+
+CREATE TABLE addresses (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    fullName VARCHAR(255) NOT NULL,
+    phoneNumber VARCHAR(255) NOT NULL,
+    province VARCHAR(255) NOT NULL,
+    district VARCHAR(255) NOT NULL,
+    wards VARCHAR(255) NOT NULL,
+    arrdessDetail VARCHAR(255) NOT NULL,
+    userId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id)
+)
+
+CREATE TABLE orders (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    deliveryDate DATETIME,
+    price INT NOT NULL,
+    orderStatus ENUM('pending', 'confirmed', 'inTransit','completed', 'error') DEFAULT 'pending' NOT NULL,
+    paymentStatus ENUM('unpaid', 'paid', 'refunded') DEFAULT 'unpaid' NOT NULL,
+    paymnetMethod ENUM('cash', 'transfer') DEFAULT 'cash' NOT NULL,
+    shippingFee INT DEFAULT 0,
+    description VARCHAR(255),
+    errorMessge VARCHAR(255),
+    userId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id)
+)
+
+CREATE TABLE orderAddresses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fullName VARCHAR(255) NOT NULL,
+    phoneNumber VARCHAR(255) NOT NULL,
+    province VARCHAR(255) NOT NULL,
+    district VARCHAR(255) NOT NULL,
+    wards VARCHAR(255) NOT NULL,
+    arrdessDetail VARCHAR(255) NOT NULL,
+    orderId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (orderId) REFERENCES orders(id)
+);
+
+CREATE TABLE brands (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE clubOrNational (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    club VARCHAR(255),
+    nation VARCHAR(255),
+    league VARCHAR(255),
+    continent VARCHAR(255),
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    price INT DEFAULT 0 NOT NULL,
+    quantity INT DEFAULT 1 NOT NULL,
+    description VARCHAR(255),
+    categoryId INT,
+    brandId INT,
+    clubOrNationalId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+   	FOREIGN KEY (categoryId) REFERENCES categories(id),
+   	FOREIGN KEY (brandId) REFERENCES brands(id),
+   	FOREIGN KEY (clubOrNationalId) REFERENCES clubOrNationals(id)
+);
+
+CREATE TABLE images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    url TEXT NOT NULL,
+	isThumbnail BOOLEAN DEFAULT true,
+    productId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(productId) REFERENCES products(id)
+);
+
+CREATE TABLE attributes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    attrName VARCHAR(255) NOT NULL,
+    attrValue VARCHAR(255) NOT NULL,
+    price INT DEFAULT 0 NOT NULL,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE productAttributes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    attributeId INT,
+    productId INT,
+    quantity INT DEFAULT 1 NOT NULL,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (attributeId) REFERENCES attributes(id),
+    FOREIGN KEy (productId) REFERENCES products(id)
+);
+
+CREATE TABLE orderDetails (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    price INT NOT NULL,
+    quantity INT NOT NULL,
+    productId INT,
+    orderId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (productId) REFERENCES products(id),
+    FOREIGN KEY (orderId) REFERENCES orders(id)
+)
+
+CREATE TABLE attributeOrderDetails (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    attributeId INT,
+    orderDetailId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (attributeId) REFERENCES attributes(id),
+    FOREIGN KEY (orderDetailId) REFERENCES orderDetails(id)
+)
+
+CREATE TABLE carts (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    quantity INT DEFAULT 0 NOT NULL,
+    price INT DEFAULT 0 NOT NULL,
+    userId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id)
+)
+
+CREATE TABLE cartItems (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    quantity INT DEFAULT 0 NOT NULL,
+    price INT DEFAULT 0 NOT NULL,
+    cartId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cartId) REFERENCES carts(id)
+)
+CREATE TABLE cartItemDetails (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    cartItemId INT,
+    productAttributeId INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cartItemId) REFERENCES cartItems(id),
+    FOREIGN KEY (productAttributeId) REFERENCES productattributes(id)
+)
