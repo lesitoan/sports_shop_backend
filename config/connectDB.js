@@ -1,9 +1,9 @@
 const mysql = require('mysql2/promise');
 
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'sports_shop',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
     // waitForConnections: true,
     // connectionLimit: 10,
     // maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`

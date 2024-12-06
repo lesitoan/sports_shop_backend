@@ -1,10 +1,9 @@
 const pool = require('../config/connectDB');
-const AppError = require('../utils/AppError');
 
 const getAllUsersService = async (payload) => {
     try {
         let { limit, page, sort, duration } = payload;
-        let query = 'SELECT id, userName, gmail, phoneNumber, createAt FROM users';
+        let query = 'SELECT id, userName, email, phoneNumber, createAt FROM users';
         if (duration) {
             duration = Number(duration) || 30; // default 30 days
             const today = new Date();

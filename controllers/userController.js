@@ -32,6 +32,7 @@ const deleteUserById = async (req, res, next) => {
             return next(new AppError('No user found with that ID', 404));
         }
         res.status(204).json({
+            status: 'success',
             message: 'delete user success',
             data: null,
         });
