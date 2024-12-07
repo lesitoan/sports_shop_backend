@@ -37,16 +37,16 @@ const signUp = async (req, res, next) => {
 const signIn = async (req, res, next) => {
     try {
         const user = await signInService(req.body);
-        const { id, userName } = user;
+        const { id, userName, role } = user;
         // create access token
         const accessToken = await generateToken(
-            { id, userName },
+            { id, userName, role },
             process.env.JWT_SECRET,
             process.env.ACCESS_TOKEN_EXPIRES_IN,
         );
 
         const refreshToken = await generateToken(
-            { id, userName },
+            { id, userName, role },
             process.env.JWT_SECRET,
             process.env.REFRESH_TOKEN_EXPIRES_IN,
         );

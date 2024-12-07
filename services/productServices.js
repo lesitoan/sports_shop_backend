@@ -1,7 +1,11 @@
-const express = require('express');
-const { getAllProducts } = require('../controllers/productControllers');
+const getAppProductsService = async () => {
+    try {
+        const query = `SELECT * FROM 'products'`;
+    } catch (error) {
+        throw error;
+    }
+};
 
-const router = express.Router();
-router.route('/').get(getAllProducts);
-
-module.exports = router;
+module.exports = {
+    getAppProductsService,
+};

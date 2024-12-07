@@ -27,6 +27,9 @@ const getAllUsers = async (req, res, next) => {
 const deleteUserById = async (req, res, next) => {
     try {
         const id = req.params.id;
+        if (!id) {
+            return next(new AppError('ID is required', 400));
+        }
         const result = await deleteUserByIdService(id);
         if (result.affectedRows === 0) {
             return next(new AppError('No user found with that ID', 404));
