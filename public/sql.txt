@@ -1,8 +1,8 @@
 CREATE TABLE users (
     id int AUTO_INCREMENT PRIMARY KEY,
-    userName VARCHAR(255) NOT NULL, 
-    gmail VARCHAR(255) NOT NULL, 
-    phoneNumber VARCHAR(255) NOT NULL, 
+    userName VARCHAR(255) NOT NULL UNIQUE, 
+    gmail VARCHAR(255) NOT NULL UNIQUE, 
+    phoneNumber VARCHAR(255) NOT NULL UNIQUE,
     userPw VARCHAR(255) NOT NULL, 
     isAdmin BOOLEAN DEFAULT false,
     createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -52,24 +52,25 @@ CREATE TABLE orderAddresses (
 CREATE TABLE brands (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
     createAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
     createAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE clubOrNational (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    club VARCHAR(255),
+    club VARCHAR(255) UNIQUE,
     nation VARCHAR(255),
     league VARCHAR(255),
     continent VARCHAR(255),
-    createAt DATETIME DEFAULT CURRENT_TIMESTAMP
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_club UNIQUE (club,nation)
 );
 
 CREATE TABLE products (
@@ -104,6 +105,8 @@ CREATE TABLE attributes (
     price INT DEFAULT 0 NOT NULL,
     createAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+ALTER TABLE attributes
+ADD CONSTRAINT attr_unique UNIQUE (attrName, attrValue, price);
 
 CREATE TABLE productAttributes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -164,6 +167,6 @@ CREATE TABLE cartItemDetails (
 CREATE TABLE userValidations (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     refreshToken TEXT NOT NULL,
-    userId INT,
+    userId INT UNIQUE,
     FOREIGN KEY (userId) REFERENCES users(id)
 )

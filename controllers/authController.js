@@ -22,6 +22,7 @@ const signUp = async (req, res, next) => {
             data: null,
         });
     } catch (error) {
+        console.log(error);
         // lỗi  người dùng hoặc lỗi sql
         if (error.statusCode || error.code) {
             console.log(error.message);

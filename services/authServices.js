@@ -23,15 +23,6 @@ const signUpService = async (payload) => {
         if (!validateUserName(userName)) {
             throw new AppError('userName only includes a-z, A-Z, 0-9 and 5 characters or more', 400);
         }
-        const isEmailExist = (await pool.query(`SELECT email FROM users WHERE email = '${email}'`))[0][0]?.email;
-        if (isEmailExist) {
-            throw new AppError('Email already exists', 400);
-        }
-        const isUserNameExist = (await pool.query(`SELECT userName FROM users WHERE userName = '${userName}'`))[0][0]
-            ?.userName;
-        if (isUserNameExist) {
-            throw new AppError('userName already exists', 400);
-        }
         const hashedPassword = await hashPassword(password);
         const query = `INSERT INTO users (userName, email, userPw) VALUES ('${userName}', '${email}', '${hashedPassword}')`;
         const response = await pool.query(query);

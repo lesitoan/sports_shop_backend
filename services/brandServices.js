@@ -2,14 +2,14 @@ const pool = require('../config/connectDB');
 const AppError = require('../utils/AppError');
 const createSlug = require('../utils/createSlug');
 
-const insertCategoryService = async (payload) => {
+const insertBrandService = async (payload) => {
     try {
         const { name } = payload;
         if (!name) {
-            throw new AppError('Category name is required', 400);
+            throw new AppError('brand name is required', 400);
         }
         const slug = createSlug(name);
-        const query = `INSERT INTO categories (name, slug) VALUES ('${name}', '${slug}')`;
+        const query = `INSERT INTO brands (name, slug) VALUES ('${name}', '${slug}')`;
         const response = await pool.query(query);
         return response[0];
     } catch (error) {
@@ -17,9 +17,9 @@ const insertCategoryService = async (payload) => {
     }
 };
 
-const getAllCategoriesService = async () => {
+const getAllBrandsService = async () => {
     try {
-        const query = `SELECT * FROM categories`;
+        const query = `SELECT * FROM brands`;
         const response = await pool.query(query);
         return response[0];
     } catch (error) {
@@ -27,9 +27,9 @@ const getAllCategoriesService = async () => {
     }
 };
 
-const deleteCategoryByIdService = async (id) => {
+const deleteBrandsByIdService = async (id) => {
     try {
-        const query = `DELETE FROM categories WHERE id = ${id}`;
+        const query = `DELETE FROM brands WHERE id = ${id}`;
         const response = await pool.query(query);
         return response[0];
     } catch (error) {
@@ -38,7 +38,7 @@ const deleteCategoryByIdService = async (id) => {
 };
 
 module.exports = {
-    insertCategoryService,
-    getAllCategoriesService,
-    deleteCategoryByIdService,
+    insertBrandService,
+    getAllBrandsService,
+    deleteBrandsByIdService,
 };
