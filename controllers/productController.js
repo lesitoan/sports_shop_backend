@@ -1,4 +1,6 @@
 const { insertProductService } = require('../services/productServices');
+const AppError = require('../utils/appError');
+const uploadCloudinary = require('../config/cloudinary');
 
 const getAllProducts = async (req, res) => {
     try {
@@ -12,10 +14,21 @@ const getAllProducts = async (req, res) => {
 
 const insertProduct = async (req, res, next) => {
     try {
-        const result = await insertProductService(req.body);
+        // Upload an image
+        console.log(req.files);
+        console.log(req.body);
+
+        const uploadResult = await uploadCloudinary(req.files);
+        if (!uploadResult || uploadResult.length === 0) {
+            throw new AppError('Upload image failed', 400);
+        }
+        const imageUrls = uploadResult.map((item) => item.url);
+
+        const result = await insertProductService(req.body, imageUrls);
         if (result.affectedRows === 0) {
             return next(new AppError('Insert product failed', 400));
         }
+
         return res.status(201).json({
             status: 'success',
             message: 'Insert product success',

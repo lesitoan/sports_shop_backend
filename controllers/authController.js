@@ -1,4 +1,4 @@
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/appError');
 const {
     signUpService,
     signInService,
@@ -8,7 +8,6 @@ const {
     refreshTokenService,
 } = require('../services/authServices');
 const { generateToken } = require('../utils/jwt');
-const sendMail = require('../utils/sendMail');
 
 const signUp = async (req, res, next) => {
     try {
@@ -78,9 +77,6 @@ const resetPassword = async (req, res, next) => {
     try {
         const newPassword = await resetPasswordService(req.body);
         const { email } = req.body;
-
-        //send mail
-        await sendMail(email, 'Reset password', `Your new password is: ${newPassword}`);
 
         res.status(200).json({
             status: 'success',

@@ -3,7 +3,7 @@ const {
     getAllAttributesService,
     deleteAttributeByIdService,
 } = require('../services/attributeService');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/appError');
 
 const insertAttributes = async (req, res, next) => {
     try {

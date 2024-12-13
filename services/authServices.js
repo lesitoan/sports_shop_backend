@@ -1,9 +1,10 @@
 const pool = require('../config/connectDB');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/appError');
 
 const { hashPassword, verifyPassword } = require('../utils/bcrypt');
 const { validateEmail, validatePassword, validateUserName } = require('../utils/validation');
 const { verifyToken, generateToken } = require('../utils/jwt');
+const sendMail = require('../utils/sendMail');
 
 const signUpService = async (payload) => {
     try {
@@ -72,6 +73,11 @@ const resetPasswordService = async (payload) => {
         }
         const newPassword = `toandeptrai_${Math.floor(Math.random() * 10000000)}`;
 
+        //send mail
+        const isSendMail = await sendMail(email, 'Reset password', `Your new password is: ${newPassword}`);
+        if (!isSendMail) {
+            throw new AppError('Reset password failed', 400);
+        }
         const hashedPassword = await hashPassword(newPassword);
         const query = `UPDATE users SET userPw = '${hashedPassword}' WHERE userName = '${userName}' AND email = '${email}'`;
         const response = await pool.query(query);
