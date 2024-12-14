@@ -1,5 +1,5 @@
 const pool = require('../config/connectDB');
-const AppError = require('../utils/appError');
+const AppError = require('../utils/AppError');
 const createSlug = require('../utils/createSlug');
 
 const insertProductService = async (data, imageUrls) => {
