@@ -1,20 +1,10 @@
-const {
-    insertAttributeService,
-    getAllAttributesService,
-    deleteAttributeByIdService,
-} = require('../services/attributeService');
 const AppError = require('../utils/AppError');
 
-const insertAttributes = async (req, res, next) => {
+const insertCart = async (req, res, next) => {
     try {
-        const result = await insertAttributeService(req.body);
-        if (result.affectedRows === 0) {
-            return next(new AppError('Insert attributes failed', 400));
-        }
-
         return res.status(201).json({
             status: 'success',
-            message: `Insert brand ${req.body?.data?.length} rows, success ${result.affectedRows} rows`,
+            message: 'Insert cart success',
             data: null,
         });
     } catch (error) {
@@ -30,15 +20,12 @@ const insertAttributes = async (req, res, next) => {
     }
 };
 
-const getAllAttributes = async (req, res, next) => {
+const getAllCarts = async (req, res, next) => {
     try {
-        const attributes = await getAllAttributesService(req.query);
         res.status(200).json({
             status: 'success',
-            count: attributes.length,
-            data: {
-                attributes,
-            },
+            count: 0,
+            data: {},
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -53,19 +40,11 @@ const getAllAttributes = async (req, res, next) => {
     }
 };
 
-const deleteAttributeById = async (req, res, next) => {
+const deleteCartById = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        if (!id) {
-            return next(new AppError('ID is required', 400));
-        }
-        const result = await deleteAttributeByIdService(id);
-        if (result.affectedRows === 0) {
-            return next(new AppError('Delete attribute failed', 400));
-        }
         return res.status(200).json({
             status: 'success',
-            message: 'Delete attribute success',
+            message: 'Delete cart success',
             data: null,
         });
     } catch (error) {
@@ -82,7 +61,7 @@ const deleteAttributeById = async (req, res, next) => {
 };
 
 module.exports = {
-    insertAttributes,
-    getAllAttributes,
-    deleteAttributeById,
+    insertCart,
+    getAllCarts,
+    deleteCartById,
 };

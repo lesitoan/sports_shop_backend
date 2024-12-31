@@ -1,16 +1,6 @@
-const { insertProductService } = require('../services/productServices');
-const AppError = require('../utils/appError');
+const { insertProductService, getProductByIdService, getProductsService } = require('../services/productServices');
+const AppError = require('../utils/AppError');
 const uploadCloudinary = require('../config/cloudinary');
-
-const getAllProducts = async (req, res) => {
-    try {
-        console.log(results);
-        console.log(fields);
-        res.send('Get all products !');
-    } catch (err) {
-        console.log(err);
-    }
-};
 
 const insertProduct = async (req, res, next) => {
     try {
@@ -47,7 +37,50 @@ const insertProduct = async (req, res, next) => {
     }
 };
 
+const getProductById = async (req, res, next) => {
+    try {
+        const product = await getProductByIdService(req.params?.id);
+        console.log(product);
+        return res.status(200).json({
+            status: 'success',
+            data: { product },
+        });
+    } catch (error) {
+        // lỗi  người dùng hoặc lỗi sql
+        if (error.statusCode || error.code) {
+            console.log(error.message);
+            next(error);
+        } else {
+            // lỗi server
+            console.log(error.message);
+            next(new AppError('server error !!!!', 500));
+        }
+    }
+};
+
+const getProducts = async (req, res, next) => {
+    try {
+        const products = await getProductsService(req.query);
+        return res.status(200).json({
+            status: 'success',
+            count: products.length,
+            data: { products },
+        });
+    } catch (error) {
+        // lỗi  người dùng hoặc lỗi sql
+        if (error.statusCode || error.code) {
+            console.log(error.message);
+            next(error);
+        } else {
+            // lỗi server
+            console.log(error.message);
+            next(new AppError('server error !!!!', 500));
+        }
+    }
+};
+
 module.exports = {
-    getAllProducts,
     insertProduct,
+    getProductById,
+    getProducts,
 };

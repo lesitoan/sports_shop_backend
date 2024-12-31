@@ -1,5 +1,5 @@
 const pool = require('../config/connectDB');
-const AppError = require('../utils/appError');
+const AppError = require('../utils/AppError');
 
 const { hashPassword, verifyPassword } = require('../utils/bcrypt');
 const { validateEmail, validatePassword, validateUserName } = require('../utils/validation');
@@ -25,8 +25,20 @@ const signUpService = async (payload) => {
             throw new AppError('userName only includes a-z, A-Z, 0-9 and 5 characters or more', 400);
         }
         const hashedPassword = await hashPassword(password);
+
+        const connection = await pool.getConnection();
+        await connection.beginTransaction(); // start transaction
         const query = `INSERT INTO users (userName, email, userPw) VALUES ('${userName}', '${email}', '${hashedPassword}')`;
-        const response = await pool.query(query);
+
+        // create cart for user
+        const response = await connection.query(query);
+        if (response[0].affectedRows !== 0) {
+            await connection.query(
+                `INSERT INTO carts (userId, quantity, price) VALUES (${response[0].insertId}, 0, 0)`,
+            );
+        }
+        await connection.commit(); // commit transaction
+
         return response[0];
     } catch (error) {
         throw error;
