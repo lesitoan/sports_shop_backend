@@ -5,7 +5,7 @@ const createSlug = require('../utils/createSlug');
 const insertProductService = async (data, imageUrls) => {
     try {
         const connection = await pool.getConnection();
-        const { name, price, quantity, categoryId, brandId, productAssociationId } = data;
+        const { name, price, quantity, categoryId, brandId, productAssociationId, attributes } = data;
         if (!name || !price || !quantity || !categoryId || imageUrls?.length === 0) {
             throw new AppError('Missing required fields', 400);
         }
@@ -28,6 +28,15 @@ const insertProductService = async (data, imageUrls) => {
         const queryImages = `INSERT INTO images (url, productId) VALUES ?`;
         await connection.query(queryImages, [images]);
 
+        // if(attributes) {
+        //     const attributesData = JSON.parse(attributes);
+        //     if(attributesData.length > 0) {
+        //         const attributes = attributesData.map((item) => [productId, item.attribute, item.price]);
+        //         const queryAttributes = `INSERT INTO attributes (productId, attribute, price) VALUES ?`;
+        //         await connection.query(queryAttributes, [attributes]);
+        //     }
+        // }
+
         await connection.commit(); // commit transaction
 
         return productResult;
@@ -44,7 +53,8 @@ const getProductByIdService = async (productId) => {
                             JSON_ARRAYAGG( JSON_OBJECT(
                                 'attrName', attributes.attrName,
                                 'attrValue', attributes.attrValue,
-                                'price', attributes.price
+                                'addPrice', productAttributes.addPrice,
+                                'productAttributeId', productAttributes.id
                             )) AS attributes
                         FROM products
                         LEFT JOIN images ON products.id = images.productId

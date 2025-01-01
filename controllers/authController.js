@@ -98,7 +98,7 @@ const resetPassword = async (req, res, next) => {
 
 const updatePassword = async (req, res, next) => {
     try {
-        await updatePasswordService(req.body);
+        await updatePasswordService(req.user, req.body);
         res.status(200).json({
             status: 'success',
             message: 'Change password success',

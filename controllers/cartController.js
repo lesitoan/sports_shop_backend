@@ -1,3 +1,4 @@
+const pool = require('../config/connectDB');
 const AppError = require('../utils/AppError');
 
 const insertCart = async (req, res, next) => {

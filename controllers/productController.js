@@ -5,8 +5,8 @@ const uploadCloudinary = require('../config/cloudinary');
 const insertProduct = async (req, res, next) => {
     try {
         // Upload an image
-        console.log(req.files);
-        console.log(req.body);
+        // console.log(req.files);
+        // console.log(req.body);
 
         const uploadResult = await uploadCloudinary(req.files);
         if (!uploadResult || uploadResult.length === 0) {

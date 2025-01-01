@@ -3,16 +3,9 @@ const AppError = require('../utils/AppError');
 
 const insertAttributeService = async (payload) => {
     try {
-        let { data } = payload;
-        let query = `INSERT IGNORE INTO attributes (attrName, attrValue, price) VALUES`;
-        data.forEach((item, index) => {
-            if (item.attrName && item.attrValue && index === data.length - 1) {
-                query += ` ('${item.attrName}', '${item.attrValue}', ${item.price || 0});`;
-            } else if (item.attrName && item.attrValue) {
-                query += ` ('${item.attrName}', '${item.attrValue}', ${item.price || 0}),`;
-            }
-        });
-        const response = await pool.query(query);
+        let query = `INSERT IGNORE INTO attributes (attrName, attrValue) VALUES ?`;
+        const attributes = payload.map((item) => [item.attrName, item.attrValue]);
+        const response = await pool.query(query, [attributes]);
         return response[0];
     } catch (error) {
         throw error;

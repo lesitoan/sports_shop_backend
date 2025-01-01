@@ -5,8 +5,10 @@ const upload = require('../config/multer');
 
 const router = express.Router();
 
-router.use(authMiddleware, adminMiddleware);
-router.route('/').get(getProducts).post(upload.array('images'), insertProduct);
+router.route('/').get(getProducts);
 router.route('/:id').get(getProductById);
+
+router.use(authMiddleware, adminMiddleware);
+router.post('/', upload.array('images'), insertProduct);
 
 module.exports = router;

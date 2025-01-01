@@ -7,14 +7,14 @@ const AppError = require('../utils/AppError');
 
 const insertAttributes = async (req, res, next) => {
     try {
-        const result = await insertAttributeService(req.body);
+        const result = await insertAttributeService(req.body.attributes);
         if (result.affectedRows === 0) {
             return next(new AppError('Insert attributes failed', 400));
         }
 
         return res.status(201).json({
             status: 'success',
-            message: `Insert brand ${req.body?.data?.length} rows, success ${result.affectedRows} rows`,
+            message: `Insert attribute ${req.body?.attributes?.length || 0} rows, success ${result.affectedRows} rows`,
             data: null,
         });
     } catch (error) {

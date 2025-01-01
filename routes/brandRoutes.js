@@ -4,8 +4,10 @@ const { authMiddleware, adminMiddleware } = require('../middleware/authMiddlewar
 
 const router = express.Router();
 
-router.use(authMiddleware, adminMiddleware);
 router.route('/').get(getAllBrands).post(insertBrand);
+
+router.use(authMiddleware, adminMiddleware);
+router.post('/', insertBrand);
 router.delete('/:id', deleteBrandById);
 
 module.exports = router;

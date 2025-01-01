@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 14, 2024 at 09:40 AM
+-- Generation Time: Jan 01, 2025 at 08:21 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -42,27 +42,13 @@ CREATE TABLE `addresses` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `attributeorderdetails`
---
-
-CREATE TABLE `attributeorderdetails` (
-  `id` int NOT NULL,
-  `attributeId` int DEFAULT NULL,
-  `orderDetailId` int DEFAULT NULL,
-  `createAt` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `attributes`
 --
 
 CREATE TABLE `attributes` (
   `id` int NOT NULL,
   `attrName` varchar(255) NOT NULL,
-  `attrValue` varchar(255) NOT NULL,
-  `price` int NOT NULL DEFAULT '0',
+  `attrvalue` varchar(255) NOT NULL,
   `createAt` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -70,21 +56,28 @@ CREATE TABLE `attributes` (
 -- Dumping data for table `attributes`
 --
 
-INSERT INTO `attributes` (`id`, `attrName`, `attrValue`, `price`, `createAt`) VALUES
-(69, 'size', 'S', 0, '2024-12-08 16:32:41'),
-(70, 'size', 'M', 5000, '2024-12-08 16:32:41'),
-(71, 'size', 'L', 10000, '2024-12-08 16:32:41'),
-(72, 'size', 'XL', 15000, '2024-12-08 16:32:41'),
-(73, 'size', 'XXL', 20000, '2024-12-08 16:32:41'),
-(74, 'size', '36', 0, '2024-12-08 16:33:31'),
-(75, 'size', '37', 5000, '2024-12-08 16:33:31'),
-(76, 'size', '38', 10000, '2024-12-08 16:33:31'),
-(77, 'size', '39', 15000, '2024-12-08 16:33:31'),
-(78, 'size', '40', 20000, '2024-12-08 16:33:31'),
-(79, 'size', '41', 25000, '2024-12-08 16:33:31'),
-(80, 'Loại vải', 'Thum co giãn', 0, '2024-12-08 16:34:35'),
-(81, 'Loại vải', 'Thun lạnh', 5000, '2024-12-08 16:34:35'),
-(82, 'Loại vải', 'mè caro', 10000, '2024-12-08 16:34:35');
+INSERT INTO `attributes` (`id`, `attrName`, `attrvalue`, `createAt`) VALUES
+(1, 'size', 'S', '2025-01-01 14:26:33'),
+(2, 'size', 'M', '2025-01-01 14:26:33'),
+(3, 'size', 'L', '2025-01-01 14:26:33'),
+(4, 'size', 'XL', '2025-01-01 14:26:33'),
+(5, 'size', 'XXL', '2025-01-01 14:26:33'),
+(6, 'Loại vải', 'Thum co giãn', '2025-01-01 14:42:04'),
+(7, 'Loại vải', 'Thun lạnh', '2025-01-01 14:42:04'),
+(8, 'Loại vải', 'mè caro', '2025-01-01 14:42:04');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attributesorder`
+--
+
+CREATE TABLE `attributesorder` (
+  `id` int NOT NULL,
+  `orderDetailId` int DEFAULT NULL,
+  `createAt` datetime DEFAULT CURRENT_TIMESTAMP,
+  `attribute` json NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -109,13 +102,13 @@ INSERT INTO `brands` (`id`, `name`, `slug`, `createAt`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cartitemdetails`
+-- Table structure for table `cartitemattributes`
 --
 
-CREATE TABLE `cartitemdetails` (
+CREATE TABLE `cartitemattributes` (
   `id` int NOT NULL,
-  `cartItemId` int DEFAULT NULL,
-  `productAttributeId` int DEFAULT NULL,
+  `cartItemId` int NOT NULL,
+  `attributeId` int NOT NULL,
   `createAt` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -130,7 +123,8 @@ CREATE TABLE `cartitems` (
   `quantity` int NOT NULL DEFAULT '0',
   `price` int NOT NULL DEFAULT '0',
   `cartId` int DEFAULT NULL,
-  `createAt` datetime DEFAULT CURRENT_TIMESTAMP
+  `createAt` datetime DEFAULT CURRENT_TIMESTAMP,
+  `productId` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -146,6 +140,17 @@ CREATE TABLE `carts` (
   `userId` int DEFAULT NULL,
   `createAt` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `carts`
+--
+
+INSERT INTO `carts` (`id`, `quantity`, `price`, `userId`, `createAt`) VALUES
+(1, 0, 0, 48, '2024-12-31 22:20:15'),
+(2, 0, 0, 49, '2024-12-31 22:21:15'),
+(3, 0, 0, 50, '2024-12-31 22:25:36'),
+(4, 0, 0, 52, '2024-12-31 22:26:46'),
+(5, 0, 0, 31, '2024-12-31 22:28:00');
 
 -- --------------------------------------------------------
 
@@ -187,6 +192,15 @@ CREATE TABLE `continents` (
   `createAt` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `continents`
+--
+
+INSERT INTO `continents` (`id`, `name`, `slug`, `createAt`) VALUES
+(1, 'châu Á', 'chau_a', '2024-12-14 17:12:09'),
+(2, 'châu Âu', 'chau_au', '2024-12-14 17:12:09'),
+(3, 'Nam mỹ', 'nam_my', '2024-12-31 21:02:32');
+
 -- --------------------------------------------------------
 
 --
@@ -200,6 +214,17 @@ CREATE TABLE `images` (
   `createAt` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `images`
+--
+
+INSERT INTO `images` (`id`, `url`, `productId`, `createAt`) VALUES
+(15, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1734624747/products/ao_bong_da_clb/rbcq3aqymgabu71vvysz.jpg', 38, '2024-12-19 23:12:30'),
+(16, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1735570100/products/ao_bong_da_clb/cewvrfhqxsvqgekybgb6.jpg', 37, '2024-12-30 21:48:22'),
+(17, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1735640419/products/ao_bong_da_clb/vo6aiyzuvklys8fstqlb.jpg', 39, '2024-12-31 17:20:20'),
+(18, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1735653878/products/ao_bong_da_clb/wc5khjlwvpeiaxqvn649.png', 40, '2024-12-31 21:04:39'),
+(19, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1735658567/products/ao_bong_da_clb/kclufau9oifar0zolzrz.png', 41, '2024-12-31 22:22:48');
+
 -- --------------------------------------------------------
 
 --
@@ -212,6 +237,14 @@ CREATE TABLE `leagues` (
   `slug` varchar(255) NOT NULL,
   `createAt` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `leagues`
+--
+
+INSERT INTO `leagues` (`id`, `name`, `slug`, `createAt`) VALUES
+(1, 'Laliga', 'laliga', '2024-12-14 17:10:18'),
+(2, 'Premier League', 'premier_league', '2024-12-14 17:10:18');
 
 -- --------------------------------------------------------
 
@@ -282,6 +315,17 @@ CREATE TABLE `productassociations` (
   `createAt` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `productassociations`
+--
+
+INSERT INTO `productassociations` (`id`, `name`, `slug`, `type`, `leagueId`, `continentId`, `createAt`) VALUES
+(1, 'Barcelona', 'barcelona', 'club', 1, NULL, '2024-12-14 17:12:50'),
+(2, 'Real Madrid', 'real_madrid', 'club', 1, NULL, '2024-12-14 17:13:07'),
+(3, 'Chelsea', 'chelsea', 'club', 2, NULL, '2024-12-14 17:13:17'),
+(4, 'Tây Ban Nha', 'tay_ban_nha', 'country', NULL, 2, '2024-12-14 17:13:50'),
+(8, 'Argentina', 'argentina', 'country', NULL, 3, '2024-12-31 21:02:48');
+
 -- --------------------------------------------------------
 
 --
@@ -290,11 +334,25 @@ CREATE TABLE `productassociations` (
 
 CREATE TABLE `productattributes` (
   `id` int NOT NULL,
-  `attributeId` int DEFAULT NULL,
   `productId` int DEFAULT NULL,
-  `quantity` int NOT NULL DEFAULT '1',
-  `createAt` datetime DEFAULT CURRENT_TIMESTAMP
+  `createAt` datetime DEFAULT CURRENT_TIMESTAMP,
+  `attributeId` int NOT NULL,
+  `addPrice` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `productattributes`
+--
+
+INSERT INTO `productattributes` (`id`, `productId`, `createAt`, `attributeId`, `addPrice`) VALUES
+(9, 38, '2025-01-01 14:28:07', 1, 0),
+(10, 38, '2025-01-01 14:28:07', 2, 5000),
+(11, 38, '2025-01-01 14:28:07', 3, 10000),
+(12, 38, '2025-01-01 14:28:07', 4, 15000),
+(13, 38, '2025-01-01 14:28:07', 5, 20000),
+(14, 37, '2025-01-01 14:28:26', 1, 0),
+(15, 37, '2025-01-01 14:28:26', 2, 5000),
+(16, 37, '2025-01-01 14:28:26', 3, 10000);
 
 -- --------------------------------------------------------
 
@@ -314,6 +372,17 @@ CREATE TABLE `products` (
   `createAt` datetime DEFAULT CURRENT_TIMESTAMP,
   `productAssociationId` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `slug`, `price`, `quantity`, `description`, `categoryId`, `brandId`, `createAt`, `productAssociationId`) VALUES
+(37, 'áo bóng đá clb Barcelona', 'ao_bong_da_clb_barcelona', 90000, 50, NULL, 6, 2, '2024-12-19 23:12:30', 1),
+(38, 'áo bóng đá clb Barcelona', 'ao_bong_da_clb_barcelona', 90000, 50, NULL, 6, 2, '2024-12-30 21:48:22', 1),
+(39, 'áo bóng đá clb Real Madird 1', 'ao_bong_da_clb_real_madird_1', 90000, 50, NULL, 6, 2, '2024-12-31 17:20:20', 2),
+(40, 'áo bóng đá Argentina mẫu 1', 'ao_bong_da_argentina_mau_1', 110000, 30, NULL, 7, 2, '2024-12-31 21:04:39', 8),
+(41, 'áo bóng đá Argentina mẫu 2', 'ao_bong_da_argentina_mau_2', 110000, 30, NULL, 7, 2, '2024-12-31 22:22:48', 8);
 
 -- --------------------------------------------------------
 
@@ -357,9 +426,13 @@ INSERT INTO `users` (`id`, `userName`, `email`, `phoneNumber`, `userPw`, `create
 (24, 'user23', 'user23@gmail.com', '0987654343', 'password23', '2024-12-04 21:23:41', 'user'),
 (25, 'user24', 'user24@gmail.com', '0987654344', 'password24', '2024-12-04 21:23:41', 'user'),
 (26, 'user25', 'user25@gmail.com', '0987654345', 'password25', '2024-12-04 21:23:41', 'user'),
-(31, 'lesitoan', 'lesitoan@gmail.com', NULL, '$2a$10$MRmlDK1vfMejgMcEYc5T4e.OqYMjq4CL2GoKo4gRW4gu0dox31Z16', '2024-12-05 21:38:05', 'user'),
+(31, 'lesitoan', 'lesitoan@gmail.com', NULL, '$2a$10$oJPAsMvccFbDTruMPbPwXujp4.ysa7JPxrCd8oJLRv8XXPQq71FAW', '2024-12-05 21:38:05', 'user'),
 (34, '1dsds', 'lesitoan2@gmail.com', NULL, '$2a$10$DuKsxV2n9ePlIJCdEM4QX..jw1x1fKxwvjdgLoHk7FfqtJFPW0eOy', '2024-12-05 21:46:53', 'user'),
-(35, 'admin', 'admin@gmail.com', NULL, '$2a$10$wDXsHd6dZKQsXENe2zBQaurnarfWtjugoStdm0zb.NEBYHcscFo7a', '2024-12-07 12:38:58', 'admin');
+(35, 'admin', 'admin@gmail.com', NULL, '$2a$10$EYCxWhp4TdTlDHmri2C2cOeSx10eMSKv/g2ERwPsSctYjL9ewTh2u', '2024-12-07 12:38:58', 'admin'),
+(48, 'toandeptrai', 'toandeptrai@gmail.com', NULL, '$2a$10$QaIf2d0UtHDSDMVBDkdcO.yeZJDm4rCwdDrg6/sOgtv/qkUZ1CisC', '2024-12-31 22:20:15', 'user'),
+(49, 'toandeptrai2', 'toandeptrai2@gmail.com', NULL, '$2a$10$v.1ISf7rmT6MyhdmZ2HcceuToWeQQCXVFvSEQHjNSpyD5azLCko1W', '2024-12-31 22:21:15', 'user'),
+(50, 'toandeptrai3', 'toandeptrai3@gmail.com', NULL, '$2a$10$1uNVDELOphTpitsnln83oe0no8TBJsSp6bAIgxYp0SwgLC3CKz6B6', '2024-12-31 22:25:36', 'user'),
+(52, 'toandeptrai4', 'toandeptrai4@gmail.com', NULL, '$2a$10$QUX368RJW3BXFAIMNWs0CuRTbNJ/QAtn6v73n1eFGJGcMZsj616tG', '2024-12-31 22:26:46', 'user');
 
 -- --------------------------------------------------------
 
@@ -374,14 +447,6 @@ CREATE TABLE `uservalidations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `uservalidations`
---
-
-INSERT INTO `uservalidations` (`id`, `refreshToken`, `userId`) VALUES
-(10, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsInVzZXJOYW1lIjoibGVzaXRvYW4iLCJyb2xlIjoidXNlciIsImlhdCI6MTczMzU1NjIxMiwiZXhwIjoxNzMzNzI5MDEyfQ.EyZs1vEnB21TUne5u40VomPo8_qaEvcn8dvucIz6C4k', 31),
-(11, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzUsInVzZXJOYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzQwODU4NTYsImV4cCI6MTczNDE3MjI1Nn0.W33tJtGuwsoAa3r_K6mr5oUmV2gSbTfN1I5twmul86E', 35);
-
---
 -- Indexes for dumped tables
 --
 
@@ -393,19 +458,18 @@ ALTER TABLE `addresses`
   ADD KEY `userId` (`userId`);
 
 --
--- Indexes for table `attributeorderdetails`
---
-ALTER TABLE `attributeorderdetails`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `attributeId` (`attributeId`),
-  ADD KEY `orderDetailId` (`orderDetailId`);
-
---
 -- Indexes for table `attributes`
 --
 ALTER TABLE `attributes`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `attr_unique` (`attrName`,`attrValue`,`price`);
+  ADD UNIQUE KEY `only` (`attrName`,`attrvalue`);
+
+--
+-- Indexes for table `attributesorder`
+--
+ALTER TABLE `attributesorder`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orderDetailId` (`orderDetailId`);
 
 --
 -- Indexes for table `brands`
@@ -415,19 +479,20 @@ ALTER TABLE `brands`
   ADD UNIQUE KEY `slug` (`slug`);
 
 --
--- Indexes for table `cartitemdetails`
+-- Indexes for table `cartitemattributes`
 --
-ALTER TABLE `cartitemdetails`
+ALTER TABLE `cartitemattributes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cartItemId` (`cartItemId`),
-  ADD KEY `productAttributeId` (`productAttributeId`);
+  ADD KEY `attributeId` (`attributeId`);
 
 --
 -- Indexes for table `cartitems`
 --
 ALTER TABLE `cartitems`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `cartId` (`cartId`);
+  ADD KEY `cartId` (`cartId`),
+  ADD KEY `productId` (`productId`);
 
 --
 -- Indexes for table `carts`
@@ -502,8 +567,8 @@ ALTER TABLE `productassociations`
 --
 ALTER TABLE `productattributes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `attributeId` (`attributeId`),
-  ADD KEY `productId` (`productId`);
+  ADD KEY `productId` (`productId`),
+  ADD KEY `attributeId` (`attributeId`);
 
 --
 -- Indexes for table `products`
@@ -541,16 +606,16 @@ ALTER TABLE `addresses`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `attributeorderdetails`
---
-ALTER TABLE `attributeorderdetails`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `attributes`
 --
 ALTER TABLE `attributes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `attributesorder`
+--
+ALTER TABLE `attributesorder`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -559,9 +624,9 @@ ALTER TABLE `brands`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `cartitemdetails`
+-- AUTO_INCREMENT for table `cartitemattributes`
 --
-ALTER TABLE `cartitemdetails`
+ALTER TABLE `cartitemattributes`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -574,7 +639,7 @@ ALTER TABLE `cartitems`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -586,19 +651,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `continents`
 --
 ALTER TABLE `continents`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `leagues`
 --
 ALTER TABLE `leagues`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orderaddresses`
@@ -622,31 +687,31 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `productassociations`
 --
 ALTER TABLE `productassociations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `productattributes`
 --
 ALTER TABLE `productattributes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `uservalidations`
 --
 ALTER TABLE `uservalidations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
@@ -659,24 +724,24 @@ ALTER TABLE `addresses`
   ADD CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `attributeorderdetails`
+-- Constraints for table `attributesorder`
 --
-ALTER TABLE `attributeorderdetails`
-  ADD CONSTRAINT `attributeorderdetails_ibfk_1` FOREIGN KEY (`attributeId`) REFERENCES `attributes` (`id`),
-  ADD CONSTRAINT `attributeorderdetails_ibfk_2` FOREIGN KEY (`orderDetailId`) REFERENCES `orderdetails` (`id`);
+ALTER TABLE `attributesorder`
+  ADD CONSTRAINT `attributesorder_ibfk_2` FOREIGN KEY (`orderDetailId`) REFERENCES `orderdetails` (`id`);
 
 --
--- Constraints for table `cartitemdetails`
+-- Constraints for table `cartitemattributes`
 --
-ALTER TABLE `cartitemdetails`
-  ADD CONSTRAINT `cartitemdetails_ibfk_1` FOREIGN KEY (`cartItemId`) REFERENCES `cartitems` (`id`),
-  ADD CONSTRAINT `cartitemdetails_ibfk_2` FOREIGN KEY (`productAttributeId`) REFERENCES `productattributes` (`id`);
+ALTER TABLE `cartitemattributes`
+  ADD CONSTRAINT `cartitemattributes_ibfk_1` FOREIGN KEY (`cartItemId`) REFERENCES `cartitems` (`id`),
+  ADD CONSTRAINT `cartitemattributes_ibfk_2` FOREIGN KEY (`attributeId`) REFERENCES `productattributes` (`id`);
 
 --
 -- Constraints for table `cartitems`
 --
 ALTER TABLE `cartitems`
-  ADD CONSTRAINT `cartitems_ibfk_1` FOREIGN KEY (`cartId`) REFERENCES `carts` (`id`);
+  ADD CONSTRAINT `cartitems_ibfk_1` FOREIGN KEY (`cartId`) REFERENCES `carts` (`id`),
+  ADD CONSTRAINT `cartitems_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `carts`
@@ -720,8 +785,8 @@ ALTER TABLE `productassociations`
 -- Constraints for table `productattributes`
 --
 ALTER TABLE `productattributes`
-  ADD CONSTRAINT `productattributes_ibfk_1` FOREIGN KEY (`attributeId`) REFERENCES `attributes` (`id`),
-  ADD CONSTRAINT `productattributes_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `products` (`id`);
+  ADD CONSTRAINT `productattributes_ibfk_2` FOREIGN KEY (`productId`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `productattributes_ibfk_3` FOREIGN KEY (`attributeId`) REFERENCES `attributes` (`id`);
 
 --
 -- Constraints for table `products`

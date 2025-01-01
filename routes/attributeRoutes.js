@@ -4,8 +4,10 @@ const { authMiddleware, adminMiddleware } = require('../middleware/authMiddlewar
 
 const router = express.Router();
 
+router.route('/').get(getAllAttributes);
+
 router.use(authMiddleware, adminMiddleware);
-router.route('/').get(getAllAttributes).post(insertAttributes);
+router.post('/', insertAttributes);
 router.delete('/:id', deleteAttributeById);
 
 module.exports = router;

@@ -102,10 +102,11 @@ const resetPasswordService = async (payload) => {
     }
 };
 
-const updatePasswordService = async (payload) => {
+const updatePasswordService = async (userData, payload) => {
     try {
-        const { email, oldPassword, newPassword, newPasswordConfirm } = payload;
-        if (!email || !oldPassword || !newPassword || !newPasswordConfirm) {
+        console.log('userData', userData);
+        const { oldPassword, newPassword, newPasswordConfirm } = payload;
+        if (!userData || !oldPassword || !newPassword || !newPasswordConfirm) {
             throw new AppError('Change password failed', 400);
         }
         if (newPassword !== newPasswordConfirm) {
@@ -114,7 +115,7 @@ const updatePasswordService = async (payload) => {
         if (!validatePassword(newPassword)) {
             throw new AppError('The password is not in the correct format or does not have enough 8 characters', 400);
         }
-        const user = (await pool.query(`SELECT * FROM users WHERE email = '${email}'`))[0][0];
+        const user = (await pool.query(`SELECT * FROM users WHERE id = '${userData.id}'`))[0][0];
         if (!user) {
             throw new AppError('Change password failed', 400);
         }
@@ -123,7 +124,7 @@ const updatePasswordService = async (payload) => {
             throw new AppError('Password is incorrect', 400);
         }
         const hashedPassword = await hashPassword(newPassword);
-        const query = `UPDATE users SET userPw = '${hashedPassword}' WHERE email = '${email}'`;
+        const query = `UPDATE users SET userPw = '${hashedPassword}' WHERE id = '${userData.id}'`;
         const response = await pool.query(query);
         if (response[0].affectedRows === 0) {
             throw new AppError('Change password failed', 400);
