@@ -1,4 +1,5 @@
 const { insertProductService } = require('../services/productServices');
+const AppError = require('../utils/AppError');
 
 const getAllProducts = async (req, res) => {
     try {
@@ -12,10 +13,12 @@ const getAllProducts = async (req, res) => {
 
 const insertProduct = async (req, res, next) => {
     try {
-        const result = await insertProductService(req.body);
-        if (result.affectedRows === 0) {
-            return next(new AppError('Insert product failed', 400));
-        }
+        // const result = await insertProductService(req.body);
+        // if (result.affectedRows === 0) {
+        //     return next(new AppError('Insert product failed', 400));
+        // }
+        console.log(req.body);
+        console.log(req.file);
         return res.status(201).json({
             status: 'success',
             message: 'Insert product success',
