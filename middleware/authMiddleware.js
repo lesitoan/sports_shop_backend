@@ -13,9 +13,10 @@ const authMiddleware = async (req, res, next) => {
         const decoded = await verifyToken(token, process.env.JWT_SECRET);
         req.user = {
             id: decoded.id,
-            username: decoded.username,
+            userName: decoded.userName,
             role: decoded.role,
         };
+        console.log('req.user: ', req.user);
         return next();
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql

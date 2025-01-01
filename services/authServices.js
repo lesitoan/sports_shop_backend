@@ -178,7 +178,7 @@ const refreshTokenService = async (payload) => {
         }
         const decoded = await verifyToken(refreshToken, process.env.JWT_SECRET);
         const accessToken = await generateToken(
-            { userId: decoded.userId, email: decoded.email, role: decoded.role },
+            { id: decoded.id, userName: decoded.userName, role: decoded.role },
             process.env.JWT_SECRET,
             process.env.ACCESS_TOKEN_EXPIRES_IN,
         );
