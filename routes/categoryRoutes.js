@@ -4,8 +4,10 @@ const { authMiddleware, adminMiddleware } = require('../middleware/authMiddlewar
 
 const router = express.Router();
 
+router.route('/').get(getAllCategories);
+
 router.use(authMiddleware, adminMiddleware);
-router.route('/').get(getAllCategories).post(insertCategory);
+router.post('/', insertCategory);
 router.delete('/:id', deleteCategoryById);
 
 module.exports = router;

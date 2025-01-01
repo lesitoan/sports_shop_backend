@@ -4,6 +4,7 @@ const AppError = require('../utils/AppError');
 const { hashPassword, verifyPassword } = require('../utils/bcrypt');
 const { validateEmail, validatePassword, validateUserName } = require('../utils/validation');
 const { verifyToken, generateToken } = require('../utils/jwt');
+const sendMail = require('../utils/sendMail');
 
 const signUpService = async (payload) => {
     try {
@@ -24,8 +25,20 @@ const signUpService = async (payload) => {
             throw new AppError('userName only includes a-z, A-Z, 0-9 and 5 characters or more', 400);
         }
         const hashedPassword = await hashPassword(password);
+
+        const connection = await pool.getConnection();
+        await connection.beginTransaction(); // start transaction
         const query = `INSERT INTO users (userName, email, userPw) VALUES ('${userName}', '${email}', '${hashedPassword}')`;
-        const response = await pool.query(query);
+
+        // create cart for user
+        const response = await connection.query(query);
+        if (response[0].affectedRows !== 0) {
+            await connection.query(
+                `INSERT INTO carts (userId, quantity, price) VALUES (${response[0].insertId}, 0, 0)`,
+            );
+        }
+        await connection.commit(); // commit transaction
+
         return response[0];
     } catch (error) {
         throw error;
@@ -72,6 +85,11 @@ const resetPasswordService = async (payload) => {
         }
         const newPassword = `toandeptrai_${Math.floor(Math.random() * 10000000)}`;
 
+        //send mail
+        const isSendMail = await sendMail(email, 'Reset password', `Your new password is: ${newPassword}`);
+        if (!isSendMail) {
+            throw new AppError('Reset password failed', 400);
+        }
         const hashedPassword = await hashPassword(newPassword);
         const query = `UPDATE users SET userPw = '${hashedPassword}' WHERE userName = '${userName}' AND email = '${email}'`;
         const response = await pool.query(query);
@@ -84,10 +102,11 @@ const resetPasswordService = async (payload) => {
     }
 };
 
-const updatePasswordService = async (payload) => {
+const updatePasswordService = async (userData, payload) => {
     try {
-        const { email, oldPassword, newPassword, newPasswordConfirm } = payload;
-        if (!email || !oldPassword || !newPassword || !newPasswordConfirm) {
+        console.log('userData', userData);
+        const { oldPassword, newPassword, newPasswordConfirm } = payload;
+        if (!userData || !oldPassword || !newPassword || !newPasswordConfirm) {
             throw new AppError('Change password failed', 400);
         }
         if (newPassword !== newPasswordConfirm) {
@@ -96,7 +115,7 @@ const updatePasswordService = async (payload) => {
         if (!validatePassword(newPassword)) {
             throw new AppError('The password is not in the correct format or does not have enough 8 characters', 400);
         }
-        const user = (await pool.query(`SELECT * FROM users WHERE email = '${email}'`))[0][0];
+        const user = (await pool.query(`SELECT * FROM users WHERE id = '${userData.id}'`))[0][0];
         if (!user) {
             throw new AppError('Change password failed', 400);
         }
@@ -105,7 +124,7 @@ const updatePasswordService = async (payload) => {
             throw new AppError('Password is incorrect', 400);
         }
         const hashedPassword = await hashPassword(newPassword);
-        const query = `UPDATE users SET userPw = '${hashedPassword}' WHERE email = '${email}'`;
+        const query = `UPDATE users SET userPw = '${hashedPassword}' WHERE id = '${userData.id}'`;
         const response = await pool.query(query);
         if (response[0].affectedRows === 0) {
             throw new AppError('Change password failed', 400);

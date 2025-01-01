@@ -1,19 +1,11 @@
-const {
-    getAllClubsService,
-    insertClubOrNationalService,
-    deleteClubByIdService,
-} = require('../services/clubOrNationalService');
+const pool = require('../config/connectDB');
 const AppError = require('../utils/AppError');
 
-const insertClubOrNation = async (req, res, next) => {
+const insertCart = async (req, res, next) => {
     try {
-        const result = await insertClubOrNationalService(req.body);
-        if (result.affectedRows === 0) {
-            return next(new AppError('Insert club failed', 400));
-        }
         return res.status(201).json({
             status: 'success',
-            message: 'Insert club success',
+            message: 'Insert cart success',
             data: null,
         });
     } catch (error) {
@@ -29,15 +21,12 @@ const insertClubOrNation = async (req, res, next) => {
     }
 };
 
-const getAllClubOrNations = async (req, res, next) => {
+const getAllCarts = async (req, res, next) => {
     try {
-        const clubs = await getAllClubsService(req.query);
         res.status(200).json({
             status: 'success',
-            count: clubs.length,
-            data: {
-                clubs,
-            },
+            count: 0,
+            data: {},
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -52,19 +41,11 @@ const getAllClubOrNations = async (req, res, next) => {
     }
 };
 
-const deleteClubById = async (req, res, next) => {
+const deleteCartById = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        if (!id) {
-            return next(new AppError('ID is required', 400));
-        }
-        const result = await deleteClubByIdService(id);
-        if (result.affectedRows === 0) {
-            return next(new AppError('Delete club failed', 400));
-        }
         return res.status(200).json({
             status: 'success',
-            message: 'Delete club success',
+            message: 'Delete cart success',
             data: null,
         });
     } catch (error) {
@@ -81,7 +62,7 @@ const deleteClubById = async (req, res, next) => {
 };
 
 module.exports = {
-    insertClubOrNation,
-    getAllClubOrNations,
-    deleteClubById,
+    insertCart,
+    getAllCarts,
+    deleteCartById,
 };

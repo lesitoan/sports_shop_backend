@@ -7,8 +7,9 @@ const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const brandRoutes = require('./routes/brandRoutes');
-const clubOrNationalRoutes = require('./routes/clubOrNationalRoutes');
+const associationRoutes = require('./routes/associationRoutes');
 const attributeRoutes = require('./routes/attributeRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
@@ -22,8 +23,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/brands', brandRoutes);
-app.use('/api/club-nationals', clubOrNationalRoutes);
+app.use('/api/associations', associationRoutes);
 app.use('/api/attributes', attributeRoutes);
+app.use('/api/carts', cartRoutes);
 
 app.all('*', (req, res, next) => {
     res.status(404).json({

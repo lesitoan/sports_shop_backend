@@ -1,24 +1,24 @@
-const { insertProductService } = require('../services/productServices');
+const { insertProductService, getProductByIdService, getProductsService } = require('../services/productServices');
 const AppError = require('../utils/AppError');
-
-const getAllProducts = async (req, res) => {
-    try {
-        console.log(results);
-        console.log(fields);
-        res.send('Get all products !');
-    } catch (err) {
-        console.log(err);
-    }
-};
+const uploadCloudinary = require('../config/cloudinary');
 
 const insertProduct = async (req, res, next) => {
     try {
-        // const result = await insertProductService(req.body);
-        // if (result.affectedRows === 0) {
-        //     return next(new AppError('Insert product failed', 400));
-        // }
-        console.log(req.body);
-        console.log(req.file);
+        // Upload an image
+        // console.log(req.files);
+        // console.log(req.body);
+
+        const uploadResult = await uploadCloudinary(req.files);
+        if (!uploadResult || uploadResult.length === 0) {
+            throw new AppError('Upload image failed', 400);
+        }
+        const imageUrls = uploadResult.map((item) => item.url);
+
+        const result = await insertProductService(req.body, imageUrls);
+        if (result.affectedRows === 0) {
+            return next(new AppError('Insert product failed', 400));
+        }
+
         return res.status(201).json({
             status: 'success',
             message: 'Insert product success',
@@ -37,7 +37,50 @@ const insertProduct = async (req, res, next) => {
     }
 };
 
+const getProductById = async (req, res, next) => {
+    try {
+        const product = await getProductByIdService(req.params?.id);
+        console.log(product);
+        return res.status(200).json({
+            status: 'success',
+            data: { product },
+        });
+    } catch (error) {
+        // lỗi  người dùng hoặc lỗi sql
+        if (error.statusCode || error.code) {
+            console.log(error.message);
+            next(error);
+        } else {
+            // lỗi server
+            console.log(error.message);
+            next(new AppError('server error !!!!', 500));
+        }
+    }
+};
+
+const getProducts = async (req, res, next) => {
+    try {
+        const products = await getProductsService(req.query);
+        return res.status(200).json({
+            status: 'success',
+            count: products.length,
+            data: { products },
+        });
+    } catch (error) {
+        // lỗi  người dùng hoặc lỗi sql
+        if (error.statusCode || error.code) {
+            console.log(error.message);
+            next(error);
+        } else {
+            // lỗi server
+            console.log(error.message);
+            next(new AppError('server error !!!!', 500));
+        }
+    }
+};
+
 module.exports = {
-    getAllProducts,
     insertProduct,
+    getProductById,
+    getProducts,
 };

@@ -27,6 +27,7 @@ const getAllCategoriesService = async () => {
     }
 };
 
+// chưa ổn (phải xóa khi danh mục k có bất kì sp nào)
 const deleteCategoryByIdService = async (id) => {
     try {
         const query = `DELETE FROM categories WHERE id = ${id}`;

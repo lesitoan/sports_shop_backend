@@ -1,12 +1,14 @@
 const express = require('express');
-const path = require('path');
-
-const { getAllProducts, insertProduct } = require('../controllers/productController');
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const { getProducts, insertProduct, getProductById } = require('../controllers/productController');
+const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
+const upload = require('../config/multer');
 
 const router = express.Router();
-router.route('/').get(getAllProducts).post(upload.single('images'), insertProduct);
+
+router.route('/').get(getProducts);
+router.route('/:id').get(getProductById);
+
+router.use(authMiddleware, adminMiddleware);
+router.post('/', upload.array('images'), insertProduct);
 
 module.exports = router;
