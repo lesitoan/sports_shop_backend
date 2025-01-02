@@ -4,7 +4,7 @@ const { authMiddleware, adminMiddleware } = require('../middleware/authMiddlewar
 
 const router = express.Router();
 
-router.route('/').get(getAllBrands).post(insertBrand);
+router.route('/').get(getAllBrands);
 
 router.use(authMiddleware, adminMiddleware);
 router.post('/', insertBrand);
