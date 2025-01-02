@@ -15,9 +15,12 @@ const insertCartService = async (user, payload) => {
         // insert table cartItems
         const [cart] = await connection.query('SELECT * FROM carts WHERE userId = ?', [userId]);
         const cartData = cart[0];
+        if (!cartData) {
+            throw new AppError('Error, plesea try again', 400);
+        }
         const response1 = await connection.query(
             'INSERT INTO cartItems (quantity, price, productId, cartId) VALUES (?, ?, ?, ?)',
-            [quantity, price, productId, cartData.id],
+            [quantity, price, productId, cartData?.id],
         );
         const cartItemId = response1[0].insertId;
         // insert table cartItemAttributes
@@ -31,6 +34,7 @@ const insertCartService = async (user, payload) => {
         // update table carts
         const newPrice = cartData.price + Number(price);
         const newQuantity = cartData.quantity + 1;
+
         await connection.query('UPDATE carts SET quantity = ?, price = ? WHERE id = ?', [
             newQuantity,
             newPrice,
@@ -46,7 +50,7 @@ const insertCartService = async (user, payload) => {
 const getAllCartsService = async (userId) => {
     try {
         const query = `SELECT
-                            cartItems.id,cartItems.quantity, cartItems.price,
+                            cartItems.id as cartItemId,cartItems.quantity, cartItems.price,
                             products.name as productName, products.id as productId,
                             JSON_ARRAYAGG(images.url) as imageUrls,
                             JSON_ARRAYAGG( JSON_OBJECT(

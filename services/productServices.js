@@ -4,13 +4,13 @@ const createSlug = require('../utils/createSlug');
 
 const insertProductService = async (data, imageUrls) => {
     try {
-        const connection = await pool.getConnection();
         const { name, price, quantity, categoryId, brandId, productAssociationId, attributes } = data;
         if (!name || !price || !quantity || !categoryId || imageUrls?.length === 0) {
             throw new AppError('Missing required fields', 400);
         }
         const slug = createSlug(name);
 
+        const connection = await pool.getConnection();
         await connection.beginTransaction(); // start transaction
         const query = `INSERT INTO products (name, slug, price, quantity, categoryId, brandId, productAssociationId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
         const [productResult] = await connection.query(query, [
