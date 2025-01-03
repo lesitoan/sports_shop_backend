@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const path = require('path');
+const cors = require('cors');
 
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -18,7 +20,9 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);

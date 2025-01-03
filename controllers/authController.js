@@ -55,6 +55,15 @@ const signIn = async (req, res, next) => {
             return next(new AppError('Login failed', 400));
         }
 
+        // Create cookie
+        const cookieOptions = {
+            maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+            httpOnly: true, // không cho phép client thay đổi cookie
+            secure: false,
+        };
+        res.cookie('accessToken', accessToken, cookieOptions);
+        res.cookie('refreshToken', refreshToken, cookieOptions);
+
         res.status(200).json({
             status: 'success',
             message: 'sign in success',

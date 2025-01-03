@@ -64,7 +64,7 @@ const signInService = async (payload) => {
         if (!isPasswordMatch) {
             throw new AppError('Login failed', 400);
         }
-        user.userPw = null;
+        if (user?.userPw) delete user.userPw;
         return user;
     } catch (error) {
         throw error;
