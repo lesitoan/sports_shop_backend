@@ -19,7 +19,7 @@ const createOrderService = async (userId, payload) => {
         // insert order into orders table
         const orderStatus = 'pending';
         shippingFee = shippingFee || 0;
-        const price = products.reduce((total, product) => total + product.price, 0);
+        const price = products.reduce((total, product) => total + product.price * product.quantity, 0);
         let query = `INSERT INTO orders (userId, price, paymentStatus, paymentMethod, orderStatus, shippingFee, description) VALUES (?, ?, ?, ?, ?, ?, ?)`;
         const orderRes = await connection.query(query, [
             userId,
@@ -39,7 +39,7 @@ const createOrderService = async (userId, payload) => {
         // insert order details into orderDetails table
         const orderDetails = products.map((product) => {
             const attributes = JSON.stringify(product.attributes);
-            return [orderId, product.productId, product.quantity, product.price, attributes];
+            return [orderId, product.id, product.quantity, product.price * product.quantity, attributes];
         });
         query = `INSERT INTO orderDetails (orderId, productId, quantity, price, attributes) VALUES ?`;
         await connection.query(query, [orderDetails]);
@@ -113,39 +113,36 @@ const getOrderByIdService = async (userId, orderId) => {
     }
 };
 
+// delete when status = pending
+const deleteOrderByIdService = async (userId, orderId) => {
+    try {
+        const connection = await pool.getConnection();
+        await connection.beginTransaction(); // start transaction
+
+        let [result] = await connection.query('DELETE FROM orderAddresses WHERE orderId = ?', [orderId]);
+        if (!result.affectedRows) {
+            throw new AppError('can not delete this order', 400);
+        }
+        [result] = await connection.query('DELETE FROM orderDetails WHERE orderId = ?', [orderId]);
+        if (!result.affectedRows) {
+            throw new AppError('can not delete this order', 400);
+        }
+        [result] = await connection.query(
+            `DELETE FROM orders WHERE userId = ? AND id = ? AND orderStatus = 'pending'`,
+            [userId, orderId],
+        );
+        if (!result.affectedRows) {
+            throw new AppError('can not delete this order', 400);
+        }
+        connection.commit(); // commit transaction
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     createOrderService,
     getAllOrdersService,
     getOrderByIdService,
+    deleteOrderByIdService,
 };
-
-// const query = `SELECT JSON_OBJECT (
-//     'paymentStatus', orders.paymentStatus,
-//     'paymentMethod', orders.paymentMethod,
-//     'shippingFee', orders.shippingFee,
-//     'description', orders.description,
-//     'orderStatus', orders.orderStatus,
-//     'price', orders.price,
-//     'createAt', orders.createAt,
-//     'address', JSON_OBJECT(
-//         'fullName', orderAddresses.fullName,
-//         'phoneNumber', orderAddresses.phoneNumber,
-//         'province', orderAddresses.province,
-//         'district', orderAddresses.district,
-//         'ward', orderAddresses.ward,
-//         'addressDetail', orderAddresses.addressDetail
-//     ),
-//     'products', JSON_ARRAYAGG( JSON_OBJECT(
-//         'productId', orderDetails.productId,
-//         'quantity', orderDetails.quantity,
-//         'price', orderDetails.price,
-//         'attributes', orderDetails.attributes
-//     ))
-// ) as abc
-// FROM orders
-// INNER JOIN orderAddresses ON orders.id = orderAddresses.orderId
-// LEFT JOIN orderDetails ON orders.id = orderDetails.orderId
-// LEFT JOIN products ON orderDetails.productId = products.id
-// LEFT JOIN images ON products.id = images.productId
-// WHERE orders.userId = ? AND orders.id = ?
-// GROUP BY orders.id`;
