@@ -135,6 +135,19 @@ const updatePasswordService = async (userData, payload) => {
     }
 };
 
+const getMeService = async (userId) => {
+    try {
+        const user = (await pool.query(`SELECT * FROM users WHERE id = '${userId}'`))[0][0];
+        if (!user) {
+            throw new AppError('Get me failed', 400);
+        }
+        if (user?.userPw) delete user.userPw;
+        return user;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const saveRefreshTokenDBService = async (refreshToken, userId) => {
     try {
         const currentRow = (await pool.query(`SELECT * FROM userValidations WHERE userId = '${userId}'`))[0][0];
@@ -163,13 +176,8 @@ const saveRefreshTokenDBService = async (refreshToken, userId) => {
     }
 };
 
-const refreshTokenService = async (payload) => {
+const refreshTokenService = async (refreshToken) => {
     try {
-        const { refreshToken } = payload;
-        console.log('refreshToken', refreshToken);
-        if (!refreshToken) {
-            throw new AppError('Refresh token failed', 400);
-        }
         const userValidation = (
             await pool.query(`SELECT * FROM userValidations WHERE refreshToken = '${refreshToken}'`)
         )[0][0];
@@ -188,11 +196,22 @@ const refreshTokenService = async (payload) => {
     }
 };
 
+const deleteRefreshTokenDBService = async (userId) => {
+    try {
+        const response = await pool.query(`DELETE FROM userValidations WHERE userId = '${userId}'`);
+        return response[0];
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     signUpService,
     signInService,
     resetPasswordService,
     updatePasswordService,
+    getMeService,
     saveRefreshTokenDBService,
     refreshTokenService,
+    deleteRefreshTokenDBService,
 };

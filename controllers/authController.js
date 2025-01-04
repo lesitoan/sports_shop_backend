@@ -6,6 +6,8 @@ const {
     updatePasswordService,
     saveRefreshTokenDBService,
     refreshTokenService,
+    deleteRefreshTokenDBService,
+    getMeService,
 } = require('../services/authServices');
 const { generateToken } = require('../utils/jwt');
 
@@ -126,13 +128,77 @@ const updatePassword = async (req, res, next) => {
     }
 };
 
+const getMe = async (req, res, next) => {
+    try {
+        const user = await getMeService(req.user.id);
+        res.status(200).json({
+            status: 'success',
+            message: 'Get me success',
+            data: { user },
+        });
+    } catch (error) {
+        // lỗi  người dùng hoặc lỗi sql
+        if (error.statusCode || error.code) {
+            console.log(error.message);
+            next(error);
+        } else {
+            // lỗi server
+            console.log(error.message);
+            next(new AppError('server error !!!!', 500));
+        }
+    }
+};
+
 const refreshToken = async (req, res, next) => {
     try {
-        const accessToken = await refreshTokenService(req.body);
+        const refreshToken = req.cookies?.refreshToken;
+        if (!refreshToken) {
+            return next(new AppError('Unauthorized', 401));
+        }
+        const accessToken = await refreshTokenService(refreshToken);
+
+        // Create cookie
+        const cookieOptions = {
+            maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+            httpOnly: true, // không cho phép client thay đổi cookie
+            secure: false,
+        };
+        res.cookie('accessToken', accessToken, cookieOptions);
+
         res.status(200).json({
             status: 'success',
             message: 'Refresh token success',
             data: { accessToken },
+        });
+    } catch (error) {
+        // lỗi  người dùng hoặc lỗi sql
+        if (error.statusCode || error.code) {
+            console.log(error.message);
+            next(error);
+        } else {
+            // lỗi server
+            console.log(error.message);
+            next(new AppError('server error !!!!', 500));
+        }
+    }
+};
+
+const logout = async (req, res, next) => {
+    try {
+        // delete refresh token in db
+        const result = await deleteRefreshTokenDBService(req.user.id);
+        if (result.affectedRows === 0) {
+            return next(new AppError('Logout failed', 400));
+        }
+
+        // delete cookie
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Logout success',
+            data: null,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -152,5 +218,7 @@ module.exports = {
     signIn,
     resetPassword,
     updatePassword,
+    getMe,
     refreshToken,
+    logout,
 };

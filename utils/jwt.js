@@ -22,9 +22,9 @@ const verifyToken = async (token, key) => {
             if (err) {
                 console.log(err.message);
                 if (err.name === 'TokenExpiredError') {
-                    reject(new AppError('Token expired', 401));
+                    reject(new AppError('Token_expired', 401));
                 } else {
-                    reject(new AppError('Token invalid', 401));
+                    reject(new AppError('Token_invalid', 401));
                 }
             } else {
                 resolve(decoded);
