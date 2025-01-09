@@ -92,7 +92,8 @@ const resetPassword = async (req, res, next) => {
         res.status(200).json({
             status: 'success',
             message: 'Reset password success',
-            data: { newPassword },
+            data: null,
+            // data: { newPassword },
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -171,6 +172,8 @@ const refreshToken = async (req, res, next) => {
             data: { accessToken },
         });
     } catch (error) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
         // lỗi  người dùng hoặc lỗi sql
         if (error.statusCode || error.code) {
             console.log(error.message);

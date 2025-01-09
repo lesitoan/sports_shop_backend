@@ -15,12 +15,15 @@ const generateToken = async (data, key, expiresIn) => {
     );
 };
 
-const verifyToken = async (token, key) => {
+const verifyToken = async (token, key, type = null) => {
     if (!token) return null;
     return new Promise((resolve, reject) =>
         jwt.verify(token, key, (err, decoded) => {
             if (err) {
                 console.log(err.message);
+                if (type === 'refreshToken') {
+                    reject(new AppError('Unauthorized', 401));
+                }
                 if (err.name === 'TokenExpiredError') {
                     reject(new AppError('Token_expired', 401));
                 } else {

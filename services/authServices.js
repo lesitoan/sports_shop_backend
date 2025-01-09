@@ -184,7 +184,7 @@ const refreshTokenService = async (refreshToken) => {
         if (!userValidation) {
             throw new AppError('Refresh token failed', 400);
         }
-        const decoded = await verifyToken(refreshToken, process.env.JWT_SECRET);
+        const decoded = await verifyToken(refreshToken, process.env.JWT_SECRET, 'refreshToken');
         const accessToken = await generateToken(
             { id: decoded.id, userName: decoded.userName, role: decoded.role },
             process.env.JWT_SECRET,
