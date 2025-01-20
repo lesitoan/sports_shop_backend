@@ -11,7 +11,6 @@ const createOrder = async (req, res, next) => {
         return res.status(201).json({
             status: 'success',
             message: 'Create order success',
-            data: null,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -32,7 +31,7 @@ const getAllOrder = async (req, res, next) => {
         return res.status(200).json({
             status: 'success',
             count: orders.length,
-            data: { orders },
+            orders,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -52,7 +51,7 @@ const getOrderById = async (req, res, next) => {
         const order = await getOrderByIdService(req.user.id, req.params.id);
         return res.status(200).json({
             status: 'success',
-            data: { order },
+            order,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql

@@ -1,11 +1,21 @@
 const pool = require('../config/connectDB');
 const AppError = require('../utils/AppError');
+const { getAllCartsService } = require('./cartServices');
 
 const createOrderService = async (userId, payload) => {
     try {
-        let { address, products, paymentStatus, paymentMethod, shippingFee, description } = payload;
+        const carts = await getAllCartsService(userId);
+        if (!carts || carts.length === 0) {
+            throw new AppError('cart is empty', 400);
+        }
+        let { address, paymentStatus, paymentMethod, shippingFee, description } = payload;
 
-        if (!address || !products || !paymentStatus || !paymentMethod) {
+        shippingFee = 30000;
+        paymentStatus = paymentStatus || 'unpaid';
+        paymentMethod = paymentMethod || 'cash';
+        console.log(address, paymentStatus, paymentMethod);
+
+        if (!address || !paymentStatus || !paymentMethod) {
             throw new AppError('missing required field', 400);
         }
         const { fullName, phoneNumber, province, district, ward, addressDetail } = address;
@@ -18,8 +28,8 @@ const createOrderService = async (userId, payload) => {
 
         // insert order into orders table
         const orderStatus = 'pending';
-        shippingFee = shippingFee || 0;
-        const price = products.reduce((total, product) => total + product.price * product.quantity, 0);
+
+        const price = carts.reduce((total, cart) => total + cart.price, 0);
         let query = `INSERT INTO orders (userId, price, paymentStatus, paymentMethod, orderStatus, shippingFee, description) VALUES (?, ?, ?, ?, ?, ?, ?)`;
         const orderRes = await connection.query(query, [
             userId,
@@ -37,9 +47,9 @@ const createOrderService = async (userId, payload) => {
         await connection.query(query, [fullName, phoneNumber, province, district, ward, addressDetail, orderId]);
 
         // insert order details into orderDetails table
-        const orderDetails = products.map((product) => {
-            const attributes = JSON.stringify(product.attributes);
-            return [orderId, product.id, product.quantity, product.price * product.quantity, attributes];
+        const orderDetails = carts.map((cart) => {
+            const attributes = JSON.stringify(cart.attributes);
+            return [orderId, cart.productId, cart.quantity, cart.price, attributes];
         });
         query = `INSERT INTO orderDetails (orderId, productId, quantity, price, attributes) VALUES ?`;
         await connection.query(query, [orderDetails]);
@@ -48,7 +58,7 @@ const createOrderService = async (userId, payload) => {
         query = `UPDATE carts SET price = 0, quantity = 0 WHERE userId = ?`;
         await connection.query(query, [userId]);
 
-        const cartItemIds = products.map((product) => product.cartItemId);
+        const cartItemIds = carts.map((cart) => cart.cartItemId);
         query = `DELETE FROM cartItemAttributes WHERE cartItemId IN (?)`;
         await connection.query(query, [cartItemIds]);
         query = `DELETE FROM cartItems WHERE id IN (?)`;
@@ -85,7 +95,7 @@ const getOrderByIdService = async (userId, orderId) => {
                         )) as address,
                         JSON_ARRAYAGG( JSON_OBJECT(
                                 'productId', orderDetails.productId,
-                                'name', products.name,
+                                'productName', products.name,
                                 'quantity', orderDetails.quantity,
                                 'price', orderDetails.price,
                                 'attributes', orderDetails.attributes,

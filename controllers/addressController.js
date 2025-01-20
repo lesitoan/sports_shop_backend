@@ -14,7 +14,6 @@ const insertAddress = async (req, res, next) => {
         return res.status(201).json({
             status: 'success',
             message: 'Insert address success',
-            data: null,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -35,9 +34,7 @@ const getAllAddresses = async (req, res, next) => {
         res.status(200).json({
             status: 'success',
             count: addresses.length,
-            data: {
-                addresses,
-            },
+            addresses,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql

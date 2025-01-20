@@ -19,7 +19,7 @@ const insertCategoryService = async (payload) => {
 
 const getAllCategoriesService = async () => {
     try {
-        const query = `SELECT * FROM categories`;
+        const query = `SELECT id, name, slug FROM categories`;
         const response = await pool.query(query);
         return response[0];
     } catch (error) {

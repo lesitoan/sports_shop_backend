@@ -24,12 +24,11 @@ const insertCartService = async (user, payload) => {
         );
         const cartItemId = response1[0].insertId;
         // insert table cartItemAttributes
-        if (productAttributeIds.length > 0) {
+        if (productAttributeIds.length > 0 && typeof productAttributeIds === 'string') {
             productAttributeIds = JSON.parse(productAttributeIds);
-            console.log('productAttributeIds', productAttributeIds);
-            const data = productAttributeIds.map((id) => [id, cartItemId]);
-            await connection.query('INSERT INTO cartItemAttributes (productAttributeId, cartItemId) VALUES ?', [data]);
         }
+        const data = productAttributeIds.map((id) => [id, cartItemId]);
+        await connection.query('INSERT INTO cartItemAttributes (productAttributeId, cartItemId) VALUES ?', [data]);
 
         // update table carts
         const newPrice = cartData.price + Number(price);

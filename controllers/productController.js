@@ -1,4 +1,4 @@
-const { insertProductService, getProductByIdService, getProductsService } = require('../services/productServices');
+const { insertProductService, getProductBySlugService, getProductsService } = require('../services/productServices');
 const AppError = require('../utils/AppError');
 const uploadCloudinary = require('../config/cloudinary');
 
@@ -37,13 +37,13 @@ const insertProduct = async (req, res, next) => {
     }
 };
 
-const getProductById = async (req, res, next) => {
+const getProductBySlug = async (req, res, next) => {
     try {
-        const product = await getProductByIdService(req.params?.id);
+        const product = await getProductBySlugService(req.params?.slug);
         console.log(product);
         return res.status(200).json({
             status: 'success',
-            data: { product },
+            product,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -64,7 +64,7 @@ const getProducts = async (req, res, next) => {
         return res.status(200).json({
             status: 'success',
             count: products.length,
-            data: { products },
+            products,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -81,6 +81,6 @@ const getProducts = async (req, res, next) => {
 
 module.exports = {
     insertProduct,
-    getProductById,
+    getProductBySlug,
     getProducts,
 };

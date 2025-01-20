@@ -45,7 +45,7 @@ const insertProductService = async (data, imageUrls) => {
     }
 };
 
-const getProductByIdService = async (productId) => {
+const getProductBySlugService = async (productSlug) => {
     try {
         const query = `SELECT 
                             products.*, categories.name as category, brands.name as brand,
@@ -62,9 +62,9 @@ const getProductByIdService = async (productId) => {
                         LEFT JOIN attributes ON productAttributes.attributeId = attributes.id
                         LEFT JOIN categories ON products.categoryId = categories.id
                         LEFT JOIN brands ON products.brandId = brands.id
-                        WHERE products.id = ?
+                        WHERE products.slug = ?
                         GROUP BY products.id`;
-        const [product] = await pool.query(query, [productId]);
+        const [product] = await pool.query(query, [productSlug]);
         if (!product || !product[0]) {
             throw new AppError('Product not found', 404);
         }
@@ -75,7 +75,7 @@ const getProductByIdService = async (productId) => {
         } else {
             product[0].imageUrls = [...new Set(product[0].imageUrls)];
         }
-        if (product[0].attributes[0].price === null) {
+        if (product[0].attributes[0].addPrice === null) {
             product[0].attributes = null;
         } else {
             product[0].attributes = Array.from(new Set(product[0].attributes.map((item) => JSON.stringify(item)))).map(
@@ -91,12 +91,12 @@ const getProductByIdService = async (productId) => {
 
 const getProductsService = async (filter) => {
     try {
-        let { category, brand, league, continent, association, limit, page } = filter;
+        let { category, brand, league, continent, association, limit, page, q } = filter;
         limit = limit || 50;
         page = page || 1;
         const offset = (page - 1) * limit;
         let query = `SELECT 
-                        products.*, categories.name as category, brands.name as brand,
+                        products.*, categories.name as categoryName, categories.slug as categorySlug, brands.name as brand,
                         JSON_ARRAYAGG(images.url) as imageUrls
                     FROM products
                     LEFT JOIN images ON products.id = images.productId
@@ -119,6 +119,9 @@ const getProductsService = async (filter) => {
         if (brand) {
             query += ` AND brands.slug = '${brand}'`;
         }
+        if (q) {
+            query += ` AND products.slug LIKE '%${q}%'`;
+        }
 
         query += ` GROUP BY products.id LIMIT ${limit} OFFSET ${offset}`;
 
@@ -136,6 +139,6 @@ const deleteProductByIdService = async (productId) => {};
 
 module.exports = {
     insertProductService,
-    getProductByIdService,
+    getProductBySlugService,
     getProductsService,
 };

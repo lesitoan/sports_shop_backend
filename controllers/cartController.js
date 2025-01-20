@@ -33,7 +33,7 @@ const getAllCarts = async (req, res, next) => {
         res.status(200).json({
             status: 'success',
             count: carts.length,
-            data: { carts },
+            carts,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -57,7 +57,6 @@ const deleteCartById = async (req, res, next) => {
         return res.status(200).json({
             status: 'success',
             message: 'Delete cart success',
-            data: null,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql
@@ -81,7 +80,6 @@ const updateCartById = async (req, res, next) => {
         return res.status(200).json({
             status: 'success',
             message: 'Update cart success',
-            data: null,
         });
     } catch (error) {
         // lỗi  người dùng hoặc lỗi sql

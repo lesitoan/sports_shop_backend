@@ -1,10 +1,10 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 03, 2025 at 07:49 AM
--- Server version: 8.0.30
+-- Generation Time: Jan 20, 2025 at 05:48 PM
+-- Server version: 8.0.31
 -- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -45,7 +45,9 @@ CREATE TABLE `addresses` (
 
 INSERT INTO `addresses` (`id`, `fullName`, `phoneNumber`, `province`, `district`, `ward`, `addressDetail`, `userId`, `createAt`) VALUES
 (1, 'le si toan', '1234567890', 'Quảng Nam', 'Thăng Bình', 'Bình Quế', 'tổ 14, BÌnh Phụng', 35, '2025-01-02 13:37:56'),
-(3, 'le si toan', '1234567890', 'Quảng Nam', 'Thăng Bình', 'Bình Quế', 'tổ 14, BÌnh Phụng', 31, '2025-01-02 13:40:17');
+(10, 'toandz123', '0353349251', ' Đà Nẵng', ' Liên Chiểu', 'Hòa Minh', 'đường Hoàng Trung Thông', 31, '2025-01-17 16:19:58'),
+(13, 'dsdsd', '1111111111', ' Quảng Nam', ' Thăng Bình', 'Bình Quế', 'đường Hoàng Trung Thông', 54, '2025-01-17 17:58:56'),
+(14, 'TOANDZ123', '0353349251', ' Bà Rịa - Vũng Tàu', ' Bà Rịa', 'Hoà Long', 'đường Hoàng Trung Thông', 31, '2025-01-17 21:42:18');
 
 -- --------------------------------------------------------
 
@@ -72,8 +74,7 @@ INSERT INTO `attributes` (`id`, `attrName`, `attrvalue`, `createAt`) VALUES
 (5, 'size', 'XXL', '2025-01-01 14:26:33'),
 (6, 'Loại vải', 'Thum co giãn', '2025-01-01 14:42:04'),
 (7, 'Loại vải', 'Thun lạnh', '2025-01-01 14:42:04'),
-(8, 'Loại vải', 'mè caro', '2025-01-01 14:42:04'),
-(18, 'Loại vải', 'mè caro 2', '2025-01-03 14:34:20');
+(8, 'Loại vải', 'mè caro', '2025-01-01 14:42:04');
 
 -- --------------------------------------------------------
 
@@ -113,10 +114,14 @@ CREATE TABLE `cartitemattributes` (
 --
 
 INSERT INTO `cartitemattributes` (`id`, `cartItemId`, `productAttributeId`, `createAt`) VALUES
-(19, 16, 9, '2025-01-01 23:15:25'),
-(20, 16, 10, '2025-01-01 23:15:25'),
-(21, 16, 11, '2025-01-01 23:15:25'),
-(32, 23, 11, '2025-01-02 00:28:10');
+(107, 67, 27, '2025-01-17 17:57:25'),
+(108, 67, 31, '2025-01-17 17:57:25'),
+(133, 80, 17, '2025-01-20 13:11:29'),
+(134, 80, 22, '2025-01-20 13:11:29'),
+(135, 81, 19, '2025-01-20 13:13:43'),
+(136, 81, 24, '2025-01-20 13:13:43'),
+(137, 82, 18, '2025-01-20 14:02:15'),
+(138, 82, 23, '2025-01-20 14:02:15');
 
 -- --------------------------------------------------------
 
@@ -138,8 +143,10 @@ CREATE TABLE `cartitems` (
 --
 
 INSERT INTO `cartitems` (`id`, `quantity`, `price`, `cartId`, `createAt`, `productId`) VALUES
-(16, 10, 100000, 5, '2025-01-01 23:15:25', 38),
-(23, 100, 500000, 5, '2025-01-02 00:28:10', 37);
+(67, 3, 360000, 7, '2025-01-17 17:57:25', 44),
+(80, 3, 300000, 4, '2025-01-20 13:11:29', 43),
+(81, 1, 130000, 4, '2025-01-20 13:13:43', 43),
+(82, 1, 115000, 4, '2025-01-20 14:02:15', 43);
 
 -- --------------------------------------------------------
 
@@ -163,8 +170,10 @@ INSERT INTO `carts` (`id`, `quantity`, `price`, `userId`, `createAt`) VALUES
 (1, 0, 0, 48, '2024-12-31 22:20:15'),
 (2, 0, 0, 49, '2024-12-31 22:21:15'),
 (3, 0, 0, 50, '2024-12-31 22:25:36'),
-(4, 0, 0, 31, '2024-12-31 22:26:46'),
-(5, 2, 600000, 35, '2024-12-31 22:28:00');
+(4, 3, 545000, 31, '2024-12-31 22:26:46'),
+(5, 0, 0, 35, '2024-12-31 22:28:00'),
+(6, 0, 0, 53, '2025-01-06 22:05:17'),
+(7, 1, 360000, 54, '2025-01-06 23:14:56');
 
 -- --------------------------------------------------------
 
@@ -233,11 +242,19 @@ CREATE TABLE `images` (
 --
 
 INSERT INTO `images` (`id`, `url`, `productId`, `createAt`) VALUES
-(15, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1734624747/products/ao_bong_da_clb/rbcq3aqymgabu71vvysz.jpg', 37, '2024-12-19 23:12:30'),
-(16, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1735570100/products/ao_bong_da_clb/cewvrfhqxsvqgekybgb6.jpg', 37, '2024-12-30 21:48:22'),
-(17, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1735640419/products/ao_bong_da_clb/vo6aiyzuvklys8fstqlb.jpg', 37, '2024-12-31 17:20:20'),
-(18, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1735653878/products/ao_bong_da_clb/wc5khjlwvpeiaxqvn649.png', 37, '2024-12-31 21:04:39'),
-(19, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1735658567/products/ao_bong_da_clb/kclufau9oifar0zolzrz.png', 37, '2024-12-31 22:22:48');
+(21, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268246/products/ao_bong_da_clb/rvljme0eqm8af3j91cgo.jpg', 43, '2025-01-07 23:44:09'),
+(22, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268291/products/ao_bong_da_clb/m8jgducnsozm0baynlmn.webp', 44, '2025-01-07 23:44:52'),
+(23, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268399/products/ao_bong_da_clb/lshfyp2esfeoi3y7b6gl.webp', 45, '2025-01-07 23:46:40'),
+(24, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268435/products/ao_bong_da_clb/ehdlqkxgy6ceztxyyqhs.webp', 46, '2025-01-07 23:47:16'),
+(25, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268485/products/ao_bong_da_clb/akhnpcoopg9konuygw5q.webp', 47, '2025-01-07 23:48:07'),
+(26, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268518/products/ao_bong_da_clb/c0t5o9jcy3rxsthx4t7j.webp', 48, '2025-01-07 23:48:39'),
+(27, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268561/products/ao_bong_da_clb/xdu6oq6xffu62lam8g6x.jpg', 49, '2025-01-07 23:49:22'),
+(28, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268768/products/ao_bong_da_clb/cpmfix8gjybj2cvx0maf.webp', 50, '2025-01-07 23:52:50'),
+(29, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736268797/products/ao_bong_da_clb/igiwophwemwmb4sljddr.jpg', 51, '2025-01-07 23:53:18'),
+(30, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736269038/products/ao_bong_da_clb/fkgu5db3xfrvkz01cdh5.png', 52, '2025-01-07 23:56:51'),
+(31, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736269038/products/ao_bong_da_clb/fkgu5db3xfrvkz01cdh5.png', 53, '2025-01-07 23:57:19'),
+(32, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736269061/products/ao_bong_da_clb/rfci2927jrwgisxtzrvf.png', 54, '2025-01-07 23:57:42'),
+(33, 'http://res.cloudinary.com/dfwvndqqw/image/upload/v1736269081/products/ao_bong_da_clb/uenmhn7wurtnywaibooz.jpg', 55, '2025-01-07 23:58:02');
 
 -- --------------------------------------------------------
 
@@ -283,7 +300,9 @@ CREATE TABLE `orderaddresses` (
 --
 
 INSERT INTO `orderaddresses` (`id`, `fullName`, `phoneNumber`, `province`, `district`, `ward`, `addressDetail`, `orderId`, `createAt`) VALUES
-(19, 'le si toan', '1234567890', 'quang Nam', 'thang binh', 'binh que', 'to 15', 25, '2025-01-03 14:29:50');
+(26, 'le si toan', '1234567890', 'quang Nam', 'thang binh', 'binh que', 'to 15', 32, '2025-01-17 18:19:39'),
+(27, 'TOANDZ123', '0353349251', ' Bà Rịa - Vũng Tàu', ' Bà Rịa', 'Hoà Long', 'đường Hoàng Trung Thông', 33, '2025-01-17 21:59:42'),
+(28, 'TOANDZ123', '0353349251', ' Bà Rịa - Vũng Tàu', ' Bà Rịa', 'Hoà Long', 'đường Hoàng Trung Thông', 34, '2025-01-17 22:01:10');
 
 -- --------------------------------------------------------
 
@@ -306,7 +325,11 @@ CREATE TABLE `orderdetails` (
 --
 
 INSERT INTO `orderdetails` (`id`, `price`, `quantity`, `productId`, `orderId`, `createAt`, `attributes`) VALUES
-(30, 100000, 1, 37, 25, '2025-01-03 14:29:50', '[{\"attrName\": \"size\", \"attrValue\": \"XXL\"}]');
+(39, 260000, 2, 44, 32, '2025-01-17 18:19:39', '[{\"attrName\": \"Loại vải\", \"attrValue\": \"mè caro\"}, {\"attrName\": \"size\", \"attrValue\": \"L\"}]'),
+(40, 330000, 3, 52, 32, '2025-01-17 18:19:39', '[{\"attrName\": \"Loại vải\", \"attrValue\": \"Thum co giãn\"}, {\"attrName\": \"size\", \"attrValue\": \"L\"}]'),
+(41, 780000, 6, 45, 33, '2025-01-17 21:59:42', '[{\"attrName\": \"Loại vải\", \"attrValue\": \"mè caro\"}, {\"attrName\": \"size\", \"attrValue\": \"L\"}]'),
+(42, 120000, 1, 46, 33, '2025-01-17 21:59:42', '[{\"attrName\": \"Loại vải\", \"attrValue\": \"Thun lạnh\"}, {\"attrName\": \"size\", \"attrValue\": \"L\"}]'),
+(43, 100000, 1, 52, 34, '2025-01-17 22:01:10', '[{\"attrName\": \"Loại vải\", \"attrValue\": \"Thum co giãn\"}, {\"attrName\": \"size\", \"attrValue\": \"S\"}]');
 
 -- --------------------------------------------------------
 
@@ -333,7 +356,9 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `deliveryDate`, `price`, `orderStatus`, `paymentStatus`, `paymentMethod`, `shippingFee`, `description`, `errorMessge`, `userId`, `createAt`) VALUES
-(25, NULL, 100000, 'confirmed', 'unpaid', 'cash', 20000, 'đóng gói cẩn thận nha shop', NULL, 31, '2025-01-03 14:29:50');
+(32, NULL, 590000, 'inTransit', 'unpaid', 'cash', 20000, 'đóng gói cẩn thận nha shop', NULL, 31, '2025-01-17 18:19:39'),
+(33, NULL, 900000, 'inTransit', 'unpaid', 'cash', 30000, NULL, NULL, 31, '2025-01-17 21:59:42'),
+(34, NULL, 100000, 'completed', 'unpaid', 'cash', 30000, NULL, NULL, 31, '2025-01-17 22:01:10');
 
 -- --------------------------------------------------------
 
@@ -360,7 +385,9 @@ INSERT INTO `productassociations` (`id`, `name`, `slug`, `type`, `leagueId`, `co
 (2, 'Real Madrid', 'real_madrid', 'club', 1, NULL, '2024-12-14 17:13:07'),
 (3, 'Chelsea', 'chelsea', 'club', 2, NULL, '2024-12-14 17:13:17'),
 (4, 'Tây Ban Nha', 'tay_ban_nha', 'country', NULL, 2, '2024-12-14 17:13:50'),
-(8, 'Argentina', 'argentina', 'country', NULL, 3, '2024-12-31 21:02:48');
+(8, 'Argentina', 'argentina', 'country', NULL, 3, '2024-12-31 21:02:48'),
+(10, 'Liverpool', 'liverpool', 'club', 2, NULL, '2025-01-07 23:36:29'),
+(11, 'Mu', 'mu', 'club', 2, NULL, '2025-01-07 23:36:38');
 
 -- --------------------------------------------------------
 
@@ -381,14 +408,110 @@ CREATE TABLE `productattributes` (
 --
 
 INSERT INTO `productattributes` (`id`, `productId`, `createAt`, `attributeId`, `addPrice`) VALUES
-(9, 38, '2025-01-01 14:28:07', 1, 0),
-(10, 38, '2025-01-01 14:28:07', 2, 5000),
-(11, 38, '2025-01-01 14:28:07', 3, 10000),
-(12, 38, '2025-01-01 14:28:07', 4, 15000),
-(13, 38, '2025-01-01 14:28:07', 5, 20000),
-(14, 37, '2025-01-01 14:28:26', 1, 0),
-(15, 37, '2025-01-01 14:28:26', 2, 5000),
-(16, 37, '2025-01-01 14:28:26', 3, 10000);
+(17, 43, '2025-01-11 00:59:26', 1, 0),
+(18, 43, '2025-01-11 00:59:26', 2, 5000),
+(19, 43, '2025-01-11 00:59:26', 3, 10000),
+(20, 43, '2025-01-11 00:59:26', 4, 15000),
+(21, 43, '2025-01-11 00:59:26', 5, 20000),
+(22, 43, '2025-01-11 00:59:26', 6, 0),
+(23, 43, '2025-01-11 00:59:26', 7, 10000),
+(24, 43, '2025-01-11 00:59:26', 8, 20000),
+(25, 44, '2025-01-11 01:01:33', 1, 0),
+(26, 44, '2025-01-11 01:01:33', 2, 5000),
+(27, 44, '2025-01-11 01:01:33', 3, 10000),
+(28, 44, '2025-01-11 01:01:33', 4, 15000),
+(29, 44, '2025-01-11 01:01:33', 5, 20000),
+(30, 44, '2025-01-11 01:01:33', 6, 0),
+(31, 44, '2025-01-11 01:01:33', 7, 10000),
+(32, 44, '2025-01-11 01:01:33', 8, 20000),
+(33, 45, '2025-01-11 01:01:33', 1, 0),
+(34, 45, '2025-01-11 01:01:33', 2, 5000),
+(35, 45, '2025-01-11 01:01:33', 3, 10000),
+(36, 45, '2025-01-11 01:01:33', 4, 15000),
+(37, 45, '2025-01-11 01:01:33', 5, 20000),
+(38, 45, '2025-01-11 01:01:33', 6, 0),
+(39, 45, '2025-01-11 01:01:33', 7, 10000),
+(40, 45, '2025-01-11 01:01:33', 8, 20000),
+(41, 46, '2025-01-11 01:01:33', 1, 0),
+(42, 46, '2025-01-11 01:01:33', 2, 5000),
+(43, 46, '2025-01-11 01:01:33', 3, 10000),
+(44, 46, '2025-01-11 01:01:33', 4, 15000),
+(45, 46, '2025-01-11 01:01:33', 5, 20000),
+(46, 46, '2025-01-11 01:01:33', 6, 0),
+(47, 46, '2025-01-11 01:01:33', 7, 10000),
+(48, 46, '2025-01-11 01:01:33', 8, 20000),
+(49, 47, '2025-01-11 01:01:33', 1, 0),
+(50, 47, '2025-01-11 01:01:33', 2, 5000),
+(51, 47, '2025-01-11 01:01:33', 3, 10000),
+(52, 47, '2025-01-11 01:01:33', 4, 15000),
+(53, 47, '2025-01-11 01:01:33', 5, 20000),
+(54, 47, '2025-01-11 01:01:33', 6, 0),
+(55, 47, '2025-01-11 01:01:33', 7, 10000),
+(56, 47, '2025-01-11 01:01:33', 8, 20000),
+(57, 48, '2025-01-11 01:01:33', 1, 0),
+(58, 48, '2025-01-11 01:01:33', 2, 5000),
+(59, 48, '2025-01-11 01:01:33', 3, 10000),
+(60, 48, '2025-01-11 01:01:33', 4, 15000),
+(61, 48, '2025-01-11 01:01:33', 5, 20000),
+(62, 48, '2025-01-11 01:01:33', 6, 0),
+(63, 48, '2025-01-11 01:01:33', 7, 10000),
+(64, 48, '2025-01-11 01:01:33', 8, 20000),
+(65, 49, '2025-01-11 01:01:33', 1, 0),
+(66, 49, '2025-01-11 01:01:33', 2, 5000),
+(67, 49, '2025-01-11 01:01:33', 3, 10000),
+(68, 49, '2025-01-11 01:01:33', 4, 15000),
+(69, 49, '2025-01-11 01:01:33', 5, 20000),
+(70, 49, '2025-01-11 01:01:33', 6, 0),
+(71, 49, '2025-01-11 01:01:33', 7, 10000),
+(72, 49, '2025-01-11 01:01:33', 8, 20000),
+(73, 50, '2025-01-11 01:01:33', 1, 0),
+(74, 50, '2025-01-11 01:01:33', 2, 5000),
+(75, 50, '2025-01-11 01:01:33', 3, 10000),
+(76, 50, '2025-01-11 01:01:33', 4, 15000),
+(77, 50, '2025-01-11 01:01:33', 5, 20000),
+(78, 50, '2025-01-11 01:01:33', 6, 0),
+(79, 50, '2025-01-11 01:01:33', 7, 10000),
+(80, 50, '2025-01-11 01:01:33', 8, 20000),
+(81, 51, '2025-01-11 01:01:33', 1, 0),
+(82, 51, '2025-01-11 01:01:33', 2, 5000),
+(83, 51, '2025-01-11 01:01:33', 3, 10000),
+(84, 51, '2025-01-11 01:01:33', 4, 15000),
+(85, 51, '2025-01-11 01:01:33', 5, 20000),
+(86, 51, '2025-01-11 01:01:33', 6, 0),
+(87, 51, '2025-01-11 01:01:33', 7, 10000),
+(88, 51, '2025-01-11 01:01:33', 8, 20000),
+(89, 52, '2025-01-11 01:01:33', 1, 0),
+(90, 52, '2025-01-11 01:01:33', 2, 5000),
+(91, 52, '2025-01-11 01:01:33', 3, 10000),
+(92, 52, '2025-01-11 01:01:33', 4, 15000),
+(93, 52, '2025-01-11 01:01:33', 5, 20000),
+(94, 52, '2025-01-11 01:01:33', 6, 0),
+(95, 52, '2025-01-11 01:01:33', 7, 10000),
+(96, 52, '2025-01-11 01:01:33', 8, 20000),
+(97, 53, '2025-01-11 01:01:33', 1, 0),
+(98, 53, '2025-01-11 01:01:33', 2, 5000),
+(99, 53, '2025-01-11 01:01:33', 3, 10000),
+(100, 53, '2025-01-11 01:01:33', 4, 15000),
+(101, 53, '2025-01-11 01:01:33', 5, 20000),
+(102, 53, '2025-01-11 01:01:33', 6, 0),
+(103, 53, '2025-01-11 01:01:33', 7, 10000),
+(104, 53, '2025-01-11 01:01:33', 8, 20000),
+(105, 54, '2025-01-11 01:01:33', 1, 0),
+(106, 54, '2025-01-11 01:01:33', 2, 5000),
+(107, 54, '2025-01-11 01:01:33', 3, 10000),
+(108, 54, '2025-01-11 01:01:33', 4, 15000),
+(109, 54, '2025-01-11 01:01:33', 5, 20000),
+(110, 54, '2025-01-11 01:01:33', 6, 0),
+(111, 54, '2025-01-11 01:01:33', 7, 10000),
+(112, 54, '2025-01-11 01:01:33', 8, 20000),
+(113, 55, '2025-01-11 01:01:33', 1, 0),
+(114, 55, '2025-01-11 01:01:33', 2, 5000),
+(115, 55, '2025-01-11 01:01:33', 3, 10000),
+(116, 55, '2025-01-11 01:01:33', 4, 15000),
+(117, 55, '2025-01-11 01:01:33', 5, 20000),
+(118, 55, '2025-01-11 01:01:33', 6, 0),
+(119, 55, '2025-01-11 01:01:33', 7, 10000),
+(120, 55, '2025-01-11 01:01:33', 8, 20000);
 
 -- --------------------------------------------------------
 
@@ -414,11 +537,19 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `slug`, `price`, `quantity`, `description`, `categoryId`, `brandId`, `createAt`, `productAssociationId`) VALUES
-(37, 'áo bóng đá clb Barcelona', 'ao_bong_da_clb_barcelona', 90000, 50, NULL, 6, 2, '2024-12-19 23:12:30', 1),
-(38, 'áo bóng đá clb Barcelona', 'ao_bong_da_clb_barcelona', 90000, 50, NULL, 6, 2, '2024-12-30 21:48:22', 1),
-(39, 'áo bóng đá clb Real Madird 1', 'ao_bong_da_clb_real_madird_1', 90000, 50, NULL, 6, 2, '2024-12-31 17:20:20', 2),
-(40, 'áo bóng đá Argentina mẫu 1', 'ao_bong_da_argentina_mau_1', 110000, 30, NULL, 7, 2, '2024-12-31 21:04:39', 8),
-(41, 'áo bóng đá Argentina mẫu 2', 'ao_bong_da_argentina_mau_2', 110000, 30, NULL, 7, 2, '2024-12-31 22:22:48', 8);
+(43, 'áo bóng đá MU 2024 2025 siêu đẹp', 'ao_bong_da_mu_2024_2025_sieu_dep', 100000, 30, NULL, 6, 2, '2025-01-07 23:44:09', 11),
+(44, 'áo bóng đá Chelsea 2024 2025 siêu đẹp', 'ao_bong_da_chelsea_2024_2025_sieu_dep', 100000, 35, NULL, 6, 2, '2025-01-07 23:44:52', 3),
+(45, 'áo bóng đá Chelsea sân khách 2024 2025 siêu đẹp', 'ao_bong_da_chelsea_san_khach_2024_2025_sieu_dep', 100000, 34, NULL, 6, 2, '2025-01-07 23:46:40', 3),
+(46, 'áo bóng đá Liverpool sân nhà 2024 2025 siêu đẹp', 'ao_bong_da_liverpool_san_nha_2024_2025_sieu_dep', 100000, 70, NULL, 6, 2, '2025-01-07 23:47:16', 10),
+(47, 'áo bóng đá clb Barcelona sân nhà 2024 2025 siêu đẹp', 'ao_bong_da_clb_barcelona_san_nha_2024_2025_sieu_dep', 100000, 100, NULL, 6, 2, '2025-01-07 23:48:07', 1),
+(48, 'áo bóng đá clb Barcelona sân khách 2024 2025 siêu đẹp', 'ao_bong_da_clb_barcelona_san_khach_2024_2025_sieu_dep', 100000, 100, NULL, 6, 2, '2025-01-07 23:48:39', 1),
+(49, 'áo bóng đá clb Real Madrid sân nhà 2024 2025 siêu đẹp', 'ao_bong_da_clb_real_madrid_san_nha_2024_2025_sieu_dep', 100000, 12, NULL, 6, 2, '2025-01-07 23:49:22', 2),
+(50, 'áo bóng đá đội tuyển Tây Ban Nha sân nhà siêu đẹp', 'ao_bong_da_doi_tuyen_tay_ban_nha_san_nha_sieu_dep', 100000, 122, NULL, 7, 2, '2025-01-07 23:52:50', 4),
+(51, 'áo bóng đá đội tuyển Argentina sân nhà siêu đẹp', 'ao_bong_da_doi_tuyen_argentina_san_nha_sieu_dep', 100000, 122, NULL, 7, 2, '2025-01-07 23:53:18', 8),
+(52, 'áo bóng đá đội tuyển Argentina trắng kẻ sọc', 'ao_bong_da_doi_tuyen_argentina_trang_ke_soc', 100000, 122, NULL, 7, 2, '2025-01-07 23:56:51', 8),
+(53, 'Áo Bóng Đá Argentina tím than sân khách mùa 2016 - 2017', 'ao_bong_da_argentina_tim_than_san_khach_mua_2016_-_2017', 100000, 122, NULL, 7, 2, '2025-01-07 23:57:19', 8),
+(54, 'Áo Bóng Đá Argentina xanh World Cup 2018 - 2019', 'ao_bong_da_argentina_xanh_world_cup_2018_-_2019', 100000, 122, NULL, 7, 2, '2025-01-07 23:57:42', 8),
+(55, 'Áo Bóng Đá Đội Tuyển Argentina xanh loang copa 2020 - 2021', 'ao_bong_da_doi_tuyen_argentina_xanh_loang_copa_2020_-_2021', 100000, 122, NULL, 7, 2, '2025-01-07 23:58:02', 8);
 
 -- --------------------------------------------------------
 
@@ -462,13 +593,15 @@ INSERT INTO `users` (`id`, `userName`, `email`, `phoneNumber`, `userPw`, `create
 (24, 'user23', 'user23@gmail.com', '0987654343', 'password23', '2024-12-04 21:23:41', 'user'),
 (25, 'user24', 'user24@gmail.com', '0987654344', 'password24', '2024-12-04 21:23:41', 'user'),
 (26, 'user25', 'user25@gmail.com', '0987654345', 'password25', '2024-12-04 21:23:41', 'user'),
-(31, 'lesitoan', 'lesitoan@gmail.com', NULL, '$2a$10$vF0frpScpJOVa1qpl/oAzedjP5Zlyc9WFZKMQIFAyPDv3SXcCqjPO', '2024-12-05 21:38:05', 'user'),
+(31, 'lesitoan', 'lesitoan@gmail.com', NULL, '$2a$10$YhuMQMb1KDaIobePbLV7Ku5JpHFVrQZ631BAaY4Z7J4c4BEpNNSTG', '2024-12-05 21:38:05', 'user'),
 (34, '1dsds', 'lesitoan2@gmail.com', NULL, '$2a$10$DuKsxV2n9ePlIJCdEM4QX..jw1x1fKxwvjdgLoHk7FfqtJFPW0eOy', '2024-12-05 21:46:53', 'user'),
 (35, 'admin', 'admin@gmail.com', NULL, '$2a$10$EYCxWhp4TdTlDHmri2C2cOeSx10eMSKv/g2ERwPsSctYjL9ewTh2u', '2024-12-07 12:38:58', 'admin'),
 (48, 'toandeptrai', 'toandeptrai@gmail.com', NULL, '$2a$10$QaIf2d0UtHDSDMVBDkdcO.yeZJDm4rCwdDrg6/sOgtv/qkUZ1CisC', '2024-12-31 22:20:15', 'user'),
 (49, 'toandeptrai2', 'toandeptrai2@gmail.com', NULL, '$2a$10$v.1ISf7rmT6MyhdmZ2HcceuToWeQQCXVFvSEQHjNSpyD5azLCko1W', '2024-12-31 22:21:15', 'user'),
 (50, 'toandeptrai3', 'toandeptrai3@gmail.com', NULL, '$2a$10$1uNVDELOphTpitsnln83oe0no8TBJsSp6bAIgxYp0SwgLC3CKz6B6', '2024-12-31 22:25:36', 'user'),
-(52, 'toandeptrai4', 'toandeptrai4@gmail.com', NULL, '$2a$10$QUX368RJW3BXFAIMNWs0CuRTbNJ/QAtn6v73n1eFGJGcMZsj616tG', '2024-12-31 22:26:46', 'user');
+(52, 'toandeptrai4', 'toandeptrai4@gmail.com', NULL, '$2a$10$QUX368RJW3BXFAIMNWs0CuRTbNJ/QAtn6v73n1eFGJGcMZsj616tG', '2024-12-31 22:26:46', 'user'),
+(53, 'tesst11', 'tesst11@gmail.com', NULL, '$2a$10$uCLqsCsfgojIozNpzXNTL.H5agNKQz2UgC3ZqH7wAjoiUoSkCunIC', '2025-01-06 22:05:17', 'user'),
+(54, 'hokieu', 'hokieu@gmail.com', NULL, '$2a$10$KMmw468kGuJK9RGC8IQF4ego8ZoBjkDLSSKxia2bNSHlvwzLWxNvu', '2025-01-06 23:14:56', 'user');
 
 -- --------------------------------------------------------
 
@@ -487,8 +620,7 @@ CREATE TABLE `uservalidations` (
 --
 
 INSERT INTO `uservalidations` (`id`, `refreshToken`, `userId`) VALUES
-(15, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzUsInVzZXJOYW1lIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzU4ODk2NTgsImV4cCI6MTczNjA2MjQ1OH0.oJn0OaBtD-qKn_pkusXuvxSXwBrb-_zMuB-vN5-AglE', 35),
-(16, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsInVzZXJOYW1lIjoibGVzaXRvYW4iLCJyb2xlIjoidXNlciIsImlhdCI6MTczNTgxMTAwNSwiZXhwIjoxNzM1OTgzODA1fQ.ArD5XFK9ZD294tnvnrZlI5ss9CUrSMUpwLBZ7_SzJNs', 31);
+(106, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsInVzZXJOYW1lIjoibGVzaXRvYW4iLCJyb2xlIjoidXNlciIsImlhdCI6MTczNzM1Njg5MCwiZXhwIjoxNzM3NDQzMjkwfQ.P91Vfdzj2-uTCmutN0UvLZzTVfTHjt1Cq4PjY32Ux8M', 31);
 
 --
 -- Indexes for dumped tables
@@ -640,7 +772,7 @@ ALTER TABLE `uservalidations`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `attributes`
@@ -658,19 +790,19 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `cartitemattributes`
 --
 ALTER TABLE `cartitemattributes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT for table `cartitems`
 --
 ALTER TABLE `cartitems`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -688,7 +820,7 @@ ALTER TABLE `continents`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `leagues`
@@ -700,49 +832,49 @@ ALTER TABLE `leagues`
 -- AUTO_INCREMENT for table `orderaddresses`
 --
 ALTER TABLE `orderaddresses`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `orderdetails`
 --
 ALTER TABLE `orderdetails`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `productassociations`
 --
 ALTER TABLE `productassociations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `productattributes`
 --
 ALTER TABLE `productattributes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `uservalidations`
 --
 ALTER TABLE `uservalidations`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- Constraints for dumped tables
