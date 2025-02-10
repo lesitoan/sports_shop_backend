@@ -91,7 +91,7 @@ const getProductBySlugService = async (productSlug) => {
 
 const getProductsService = async (filter) => {
     try {
-        let { category, brand, league, continent, association, limit, page, q } = filter;
+        let { category, brand, league, continent, association, limit, page, q, sort } = filter;
         page = page || 1;
         let query = `
             SELECT 
@@ -125,12 +125,26 @@ const getProductsService = async (filter) => {
         if (q) {
             query += ` AND products.slug LIKE '%${q}%'`;
         }
+        query += ` GROUP BY products.id`;
 
+        if (sort) {
+            if (sort === 'price') {
+                query += ` ORDER BY price ASC`;
+            } else if (sort === 'price_desc') {
+                query += ` ORDER BY price DESC`;
+            } else if (sort === 'name') {
+                query += ` ORDER BY name ASC`;
+            } else if (sort === 'name_desc') {
+                query += ` ORDER BY name DESC`;
+            } else if (sort === 'newest') {
+                query += ` ORDER BY createAt DESC`;
+            } else if (sort === 'oldest') {
+                query += ` ORDER BY createAt ASC`;
+            }
+        }
         if (limit) {
             const offset = (page - 1) * limit;
-            query += ` GROUP BY products.id LIMIT ${limit} OFFSET ${offset}`;
-        } else {
-            query += ` GROUP BY products.id`;
+            query += ` LIMIT ${limit} OFFSET ${offset}`;
         }
 
         const [products] = await pool.query(query);
