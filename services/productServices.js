@@ -92,18 +92,21 @@ const getProductBySlugService = async (productSlug) => {
 const getProductsService = async (filter) => {
     try {
         let { category, brand, league, continent, association, limit, page, q } = filter;
-        limit = limit || 50;
         page = page || 1;
-        const offset = (page - 1) * limit;
-        let query = `SELECT 
-                        products.*, categories.name as categoryName, categories.slug as categorySlug, brands.name as brand,
-                        JSON_ARRAYAGG(images.url) as imageUrls
-                    FROM products
-                    LEFT JOIN images ON products.id = images.productId
-                    LEFT JOIN categories ON products.categoryId = categories.id
-                    LEFT JOIN brands ON products.brandId = brands.id
-                    LEFT JOIN productAssociations ON products.productAssociationId = productAssociations.id
-                    WHERE 1 `;
+        let query = `
+            SELECT 
+                products.*,
+                categories.name AS categoryName,
+                categories.slug AS categorySlug,
+                brands.name AS brand,
+                JSON_ARRAYAGG(images.url) AS imageUrls,
+                COUNT(*) OVER() AS count
+            FROM products
+            LEFT JOIN images ON products.id = images.productId
+            LEFT JOIN categories ON products.categoryId = categories.id
+            LEFT JOIN brands ON products.brandId = brands.id
+            LEFT JOIN productAssociations ON products.productAssociationId = productAssociations.id
+            WHERE 1 `;
 
         if (association) {
             query += ` AND productAssociations.slug = '${association}'`;
@@ -123,10 +126,20 @@ const getProductsService = async (filter) => {
             query += ` AND products.slug LIKE '%${q}%'`;
         }
 
-        query += ` GROUP BY products.id LIMIT ${limit} OFFSET ${offset}`;
+        if (limit) {
+            const offset = (page - 1) * limit;
+            query += ` GROUP BY products.id LIMIT ${limit} OFFSET ${offset}`;
+        } else {
+            query += ` GROUP BY products.id`;
+        }
 
         const [products] = await pool.query(query);
-        return products;
+        let count = 0;
+        if (products?.length > 0) {
+            count = products[0].count;
+            products.map((item) => delete item.count);
+        }
+        return { count, products };
     } catch (error) {
         throw error;
     }

@@ -60,10 +60,10 @@ const getProductBySlug = async (req, res, next) => {
 
 const getProducts = async (req, res, next) => {
     try {
-        const products = await getProductsService(req.query);
+        const { products, count } = await getProductsService(req.query);
         return res.status(200).json({
             status: 'success',
-            count: products.length,
+            count,
             products,
         });
     } catch (error) {
