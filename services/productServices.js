@@ -105,15 +105,15 @@ const getProductsService = async (filter) => {
             LEFT JOIN images ON products.id = images.productId
             LEFT JOIN categories ON products.categoryId = categories.id
             LEFT JOIN brands ON products.brandId = brands.id
-            LEFT JOIN productAssociations ON products.productAssociationId = productAssociations.id
+            LEFT JOIN productassociations ON products.productAssociationId = productassociations.id
             WHERE 1 `;
 
         if (association) {
-            query += ` AND productAssociations.slug = '${association}'`;
+            query += ` AND productassociations.slug = '${association}'`;
         } else if (league) {
-            query += ` AND productAssociations.leagueId = (SELECT id FROM leagues WHERE slug = '${league}')`;
+            query += ` AND productassociations.leagueId = (SELECT id FROM leagues WHERE slug = '${league}')`;
         } else if (continent) {
-            query += ` AND productAssociations.continentId = (SELECT id FROM continents WHERE slug = '${continent}')`;
+            query += ` AND productassociations.continentId = (SELECT id FROM continents WHERE slug = '${continent}')`;
         }
 
         if (category) {
