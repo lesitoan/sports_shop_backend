@@ -43,16 +43,16 @@ const createOrderService = async (userId, payload) => {
         const orderId = orderRes[0].insertId;
 
         // insert address into orderAddress table
-        query = `INSERT INTO orderAddresses (fullName, phoneNumber, province, district, ward, addressDetail, orderId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        query = `INSERT INTO orderaddresses (fullName, phoneNumber, province, district, ward, addressDetail, orderId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
         await connection.query(query, [fullName, phoneNumber, province, district, ward, addressDetail, orderId]);
 
-        // insert order details into orderDetails table
-        const orderDetails = carts.map((cart) => {
+        // insert order details into  orderdetails table
+        const orderdetails = carts.map((cart) => {
             const attributes = JSON.stringify(cart.attributes);
             return [orderId, cart.productId, cart.quantity, cart.price, attributes];
         });
-        query = `INSERT INTO orderDetails (orderId, productId, quantity, price, attributes) VALUES ?`;
-        await connection.query(query, [orderDetails]);
+        query = `INSERT INTO  orderdetails (orderId, productId, quantity, price, attributes) VALUES ?`;
+        await connection.query(query, [orderdetails]);
 
         // update shopping cart
         query = `UPDATE carts SET price = 0, quantity = 0 WHERE userId = ?`;
@@ -86,25 +86,25 @@ const getOrderByIdService = async (userId, orderId) => {
         console.log(userId, orderId);
         const query = `SELECT orders.*,
                         JSON_ARRAYAGG( JSON_OBJECT(
-                                'fullName', orderAddresses.fullName,
-                                'phoneNumber', orderAddresses.phoneNumber,
-                                'province', orderAddresses.province,
-                                'district', orderAddresses.district,
-                                'ward', orderAddresses.ward,
-                                'addressDetail', orderAddresses.addressDetail
+                                'fullName', orderaddresses.fullName,
+                                'phoneNumber', orderaddresses.phoneNumber,
+                                'province', orderaddresses.province,
+                                'district', orderaddresses.district,
+                                'ward', orderaddresses.ward,
+                                'addressDetail', orderaddresses.addressDetail
                         )) as address,
                         JSON_ARRAYAGG( JSON_OBJECT(
-                                'productId', orderDetails.productId,
+                                'productId',  orderdetails.productId,
                                 'productName', products.name,
-                                'quantity', orderDetails.quantity,
-                                'price', orderDetails.price,
-                                'attributes', orderDetails.attributes,
-                                'imageUrls', (SELECT JSON_ARRAYAGG(url) FROM images WHERE productId = orderDetails.productId)
+                                'quantity',  orderdetails.quantity,
+                                'price',  orderdetails.price,
+                                'attributes',  orderdetails.attributes,
+                                'imageUrls', (SELECT JSON_ARRAYAGG(url) FROM images WHERE productId =  orderdetails.productId)
                         )) as products
                         FROM orders
-                        INNER JOIN orderAddresses ON orders.id = orderAddresses.orderId
-                        LEFT JOIN orderDetails ON orders.id = orderDetails.orderId
-                        LEFT JOIN products ON orderDetails.productId = products.id
+                        INNER JOIN orderaddresses ON orders.id = orderaddresses.orderId
+                        LEFT JOIN  orderdetails ON orders.id =  orderdetails.orderId
+                        LEFT JOIN products ON  orderdetails.productId = products.id
                         LEFT JOIN images ON products.id = images.productId
                         WHERE orders.userId = ? AND orders.id = ?
                         GROUP BY orders.id`;
@@ -129,11 +129,11 @@ const deleteOrderByIdService = async (userId, orderId) => {
         const connection = await pool.getConnection();
         await connection.beginTransaction(); // start transaction
 
-        let [result] = await connection.query('DELETE FROM orderAddresses WHERE orderId = ?', [orderId]);
+        let [result] = await connection.query('DELETE FROM orderaddresses WHERE orderId = ?', [orderId]);
         if (!result.affectedRows) {
             throw new AppError('can not delete this order', 400);
         }
-        [result] = await connection.query('DELETE FROM orderDetails WHERE orderId = ?', [orderId]);
+        [result] = await connection.query('DELETE FROM  orderdetails WHERE orderId = ?', [orderId]);
         if (!result.affectedRows) {
             throw new AppError('can not delete this order', 400);
         }

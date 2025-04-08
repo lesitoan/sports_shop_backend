@@ -53,13 +53,13 @@ const getProductBySlugService = async (productSlug) => {
                             JSON_ARRAYAGG( JSON_OBJECT(
                                 'attrName', attributes.attrName,
                                 'attrValue', attributes.attrValue,
-                                'addPrice', productAttributes.addPrice,
-                                'productAttributeId', productAttributes.id
+                                'addPrice', productattributes.addPrice,
+                                'productAttributeId', productattributes.id
                             )) AS attributes
                         FROM products
                         LEFT JOIN images ON products.id = images.productId
-                        LEFT JOIN productAttributes ON products.id = productAttributes.productId
-                        LEFT JOIN attributes ON productAttributes.attributeId = attributes.id
+                        LEFT JOIN productattributes ON products.id = productattributes.productId
+                        LEFT JOIN attributes ON productattributes.attributeId = attributes.id
                         LEFT JOIN categories ON products.categoryId = categories.id
                         LEFT JOIN brands ON products.brandId = brands.id
                         WHERE products.slug = ?
@@ -159,7 +159,7 @@ const getProductsService = async (filter) => {
     }
 };
 
-const addProductAttributesService = async (productId, attributes) => {};
+const addproductattributesService = async (productId, attributes) => {};
 const updateProductByIdService = async (productId, data) => {};
 
 const deleteProductByIdService = async (productId) => {};

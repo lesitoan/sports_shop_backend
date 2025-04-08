@@ -150,21 +150,21 @@ const getMeService = async (userId) => {
 
 const saveRefreshTokenDBService = async (refreshToken, userId) => {
     try {
-        const currentRow = (await pool.query(`SELECT * FROM userValidations WHERE userId = '${userId}'`))[0][0];
+        const currentRow = (await pool.query(`SELECT * FROM uservalidations WHERE userId = '${userId}'`))[0][0];
         // save refreshToken to database
         console.log('userId', userId);
         console.log('currentRow', currentRow);
         let res;
         if (currentRow) {
             res = await pool.query(
-                `UPDATE userValidations SET refreshToken = '${refreshToken}' WHERE userId = '${userId}'`,
+                `UPDATE uservalidations SET refreshToken = '${refreshToken}' WHERE userId = '${userId}'`,
             );
             if (res[0].affectedRows === 0) {
                 return null;
             }
         } else {
             res = await pool.query(
-                `INSERT INTO userValidations (refreshToken, userId) VALUES ('${refreshToken}', ${userId})`,
+                `INSERT INTO uservalidations (refreshToken, userId) VALUES ('${refreshToken}', ${userId})`,
             );
             if (res[0].affectedRows === 0) {
                 return null;
@@ -179,7 +179,7 @@ const saveRefreshTokenDBService = async (refreshToken, userId) => {
 const refreshTokenService = async (refreshToken) => {
     try {
         const userValidation = (
-            await pool.query(`SELECT * FROM userValidations WHERE refreshToken = '${refreshToken}'`)
+            await pool.query(`SELECT * FROM uservalidations WHERE refreshToken = '${refreshToken}'`)
         )[0][0];
         if (!userValidation) {
             throw new AppError('Refresh token failed', 400);
@@ -198,7 +198,7 @@ const refreshTokenService = async (refreshToken) => {
 
 const deleteRefreshTokenDBService = async (userId) => {
     try {
-        const response = await pool.query(`DELETE FROM userValidations WHERE userId = '${userId}'`);
+        const response = await pool.query(`DELETE FROM uservalidations WHERE userId = '${userId}'`);
         return response[0];
     } catch (error) {
         throw error;

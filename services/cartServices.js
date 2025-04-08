@@ -12,23 +12,23 @@ const insertCartService = async (user, payload) => {
         const connection = await pool.getConnection();
         await connection.beginTransaction();
 
-        // insert table cartItems
+        // insert table cartitems
         const [cart] = await connection.query('SELECT * FROM carts WHERE userId = ?', [userId]);
         const cartData = cart[0];
         if (!cartData) {
             throw new AppError('Error, plesea try again', 400);
         }
         const response1 = await connection.query(
-            'INSERT INTO cartItems (quantity, price, productId, cartId) VALUES (?, ?, ?, ?)',
+            'INSERT INTO cartitems (quantity, price, productId, cartId) VALUES (?, ?, ?, ?)',
             [quantity, price, productId, cartData?.id],
         );
         const cartItemId = response1[0].insertId;
-        // insert table cartItemAttributes
+        // insert table cartitemattributes
         if (productAttributeIds.length > 0 && typeof productAttributeIds === 'string') {
             productAttributeIds = JSON.parse(productAttributeIds);
         }
         const data = productAttributeIds.map((id) => [id, cartItemId]);
-        await connection.query('INSERT INTO cartItemAttributes (productAttributeId, cartItemId) VALUES ?', [data]);
+        await connection.query('INSERT INTO cartitemattributes  (productAttributeId, cartItemId) VALUES ?', [data]);
 
         // update table carts
         const newPrice = cartData.price + Number(price);
@@ -49,21 +49,21 @@ const insertCartService = async (user, payload) => {
 const getAllCartsService = async (userId) => {
     try {
         const query = `SELECT
-                            cartItems.id as cartItemId,cartItems.quantity, cartItems.price,
+                            cartitems.id as cartItemId,cartitems.quantity, cartitems.price,
                             products.name as productName, products.id as productId,
                             JSON_ARRAYAGG(images.url) as imageUrls,
                             JSON_ARRAYAGG( JSON_OBJECT(
                                 'attrName', attributes.attrName,
                                 'attrValue', attributes.attrValue
                             )) AS attributes
-                        FROM cartItems
-                        LEFT JOIN products ON cartItems.productId = products.id
+                        FROM cartitems
+                        LEFT JOIN products ON cartitems.productId = products.id
                         LEFT JOIN images ON products.id = images.productId
-                        LEFT JOIN cartItemAttributes ON cartItems.id = cartItemAttributes.cartItemId
-                        LEFT JOIN productAttributes ON cartItemAttributes.productAttributeId = productAttributes.id
-                        LEFT JOIN attributes ON productAttributes.attributeId = attributes.id
-                        WHERE cartItems.cartId = (SELECT id FROM carts WHERE userId = ?)
-                        GROUP BY cartItems.id`;
+                        LEFT JOIN cartitemattributes  ON cartitems.id = cartitemattributes .cartItemId
+                        LEFT JOIN productattributes ON cartitemattributes .productAttributeId = productattributes.id
+                        LEFT JOIN attributes ON productattributes.attributeId = attributes.id
+                        WHERE cartitems.cartId = (SELECT id FROM carts WHERE userId = ?)
+                        GROUP BY cartitems.id`;
         const [carts] = await pool.query(query, [userId]);
 
         //modify data
@@ -94,13 +94,13 @@ const deleteCartByIdService = async (userId, cartItemId) => {
         const connection = await pool.getConnection();
         await connection.beginTransaction();
         // delete cartItemAttribute
-        await connection.query('DELETE FROM cartItemAttributes WHERE cartItemId = ?', [cartItemId]);
+        await connection.query('DELETE FROM cartitemattributes  WHERE cartItemId = ?', [cartItemId]);
         // delete cartItem
-        const [cartItem] = await connection.query('SELECT * FROM cartItems WHERE id = ?', [cartItemId]);
+        const [cartItem] = await connection.query('SELECT * FROM cartitems WHERE id = ?', [cartItemId]);
         if (cartItem.length === 0) {
             throw new AppError('Cart not found', 404);
         }
-        await connection.query('DELETE FROM cartItems WHERE id = ?', [cartItemId]);
+        await connection.query('DELETE FROM cartitems WHERE id = ?', [cartItemId]);
         // update cart
         const price = cartItem[0].price;
         const response = await connection.query(
@@ -120,7 +120,7 @@ const updateCartService = async (userId, cartItemId, payload) => {
         if (!quantity) {
             throw new AppError('quantity is required', 400);
         }
-        const [cartItem] = await pool.query('SELECT * FROM cartItems WHERE id = ?', [cartItemId]);
+        const [cartItem] = await pool.query('SELECT * FROM cartitems WHERE id = ?', [cartItemId]);
         if (cartItem.length === 0) {
             throw new AppError('Cart not found', 404);
         }
@@ -131,7 +131,7 @@ const updateCartService = async (userId, cartItemId, payload) => {
         const oldQuantity = cartItem[0].quantity;
         const newPrice = (oldPrice / oldQuantity) * quantity;
 
-        await connection.query('UPDATE cartItems SET quantity = ?, price = ? WHERE id = ?', [
+        await connection.query('UPDATE cartitems SET quantity = ?, price = ? WHERE id = ?', [
             quantity,
             newPrice,
             cartItemId,

@@ -12,7 +12,7 @@ const insertAssociationService = async (payload) => {
             continentId = null;
         }
         const slug = createSlug(name);
-        const query = `INSERT INTO productAssociations (name, slug, type, leagueId, continentId) VALUES
+        const query = `INSERT INTO productassociations (name, slug, type, leagueId, continentId) VALUES
                         ('${name}', '${slug}', '${type}', ${leagueId || null}, ${continentId || null})`;
         const response = await pool.query(query);
         return response[0];
@@ -43,7 +43,7 @@ const getAllContinentsService = async () => {
 
 const getClubsByLeagueIdService = async (id) => {
     try {
-        const query = `SELECT * FROM productAssociations WHERE leagueId = ${id}`;
+        const query = `SELECT * FROM productassociations WHERE leagueId = ${id}`;
         const response = await pool.query(query);
         return response[0];
     } catch (error) {
@@ -53,7 +53,7 @@ const getClubsByLeagueIdService = async (id) => {
 
 const getCountriesByContinentIdService = async (id) => {
     try {
-        const query = `SELECT * FROM productAssociations WHERE continentId = ${id}`;
+        const query = `SELECT * FROM productassociations WHERE continentId = ${id}`;
         const response = await pool.query(query);
         return response[0];
     } catch (error) {
